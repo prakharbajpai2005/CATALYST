@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { cacheWrapper, hashObject } = require('../utils/cache');
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -21,11 +22,18 @@ router.post('/gap', async (req, res) => {
       ...(currentSkills.tools || [])
     ];
 
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-2.5-flash'
-    });
+    // Generate cache key from skills + job description
+    const cacheKey = `gap:${hashObject({ allSkills, jobDescription, targetRole })}`;
 
-    const prompt = `You are a career gap analyzer. Compare the candidate's current skills against a job description.
+    const { data: analysis, fromCache } = await cacheWrapper(
+      cacheKey,
+      7 * 24 * 60 * 60, // Cache for 7 days
+      async () => {
+        const model = genAI.getGenerativeModel({ 
+          model: 'gemini-2.5-flash'
+        });
+
+        const prompt = `You are a career gap analyzer. Compare the candidate's current skills against a job description.
 
 CURRENT SKILLS:
 ${JSON.stringify(allSkills, null, 2)}
@@ -77,32 +85,39 @@ Return ONLY valid JSON in this format:
   "summary": "Brief 2-3 sentence summary of the gap analysis"
 }`;
 
-    const result = await model.generateContent(prompt);
-    const response = result.response.text();
+        const result = await model.generateContent(prompt);
+        const response = result.response.text();
 
-    // Clean up the response
-    let jsonText = response.trim();
-    if (jsonText.startsWith('```json')) {
-      jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
-    } else if (jsonText.startsWith('```')) {
-      jsonText = jsonText.replace(/```\n?/g, '');
+        // Clean up the response
+        let jsonText = response.trim();
+        if (jsonText.startsWith('```json')) {
+          jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+        } else if (jsonText.startsWith('```')) {
+          jsonText = jsonText.replace(/```\n?/g, '');
+        }
+
+        try {
+          return JSON.parse(jsonText);
+        } catch (parseError) {
+          console.error('Failed to parse Gemini response:', parseError);
+          console.error('Response was:', jsonText);
+          throw new Error('Failed to parse AI analysis');
+        }
+      }
+    );
+
+    if (fromCache) {
+      console.log('💰 Cache HIT: Saved ~$0.05 on gap analysis');
+    } else {
+      console.log('💸 Cache MISS: Called LLM for gap analysis (~$0.05)');
     }
 
-    try {
-      const analysis = JSON.parse(jsonText);
-      
-      // Store analysis in session/database if needed
-      res.json({
-        success: true,
-        analysis,
-        timestamp: new Date()
-      });
-
-    } catch (parseError) {
-      console.error('Failed to parse Gemini response:', parseError);
-      console.error('Response was:', jsonText);
-      throw new Error('Failed to parse AI analysis');
-    }
+    res.json({
+      success: true,
+      analysis,
+      timestamp: new Date(),
+      cached: fromCache
+    });
 
   } catch (error) {
     console.error('Gap analysis error:', error);

@@ -15,6 +15,14 @@ mongoose.connect(MONGODB_URI)
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch((err) => console.error('❌ MongoDB connection error:', err));
 
+// Initialize Redis connection on startup
+const { initRedis } = require('./utils/cache');
+initRedis().then(() => {
+  // Redis connection status logged in cache.js
+}).catch(() => {
+  // Error already logged in cache.js
+});
+
 // Routes
 const simulationRoutes = require('./routes/simulation');
 const userRoutes = require('./routes/user');
