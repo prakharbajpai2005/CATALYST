@@ -172,8 +172,8 @@ export default function MissionTerminal({ userId, skillId, onScoreUpdate, onXPGa
         <CardDescription>Complete tasks and receive real-time AI feedback</CardDescription>
       </CardHeader>
 
-      <CardContent className="flex-1 flex flex-col p-0">
-        <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+      <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
+        <div className="flex-1 overflow-y-auto p-4" ref={scrollRef}>
           <div className="space-y-4">
             {messages.length === 0 && !loading && (
               <div className="text-center text-gray-500 py-12">
@@ -218,7 +218,7 @@ export default function MissionTerminal({ userId, skillId, onScoreUpdate, onXPGa
               </div>
             )}
           </div>
-        </ScrollArea>
+        </div>
 
         <Separator className="bg-purple-500/20" />
 

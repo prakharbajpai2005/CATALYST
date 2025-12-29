@@ -16,6 +16,7 @@ export default function DashboardPage() {
   const [userLevel, setUserLevel] = useState(1);
   const [currentXP, setCurrentXP] = useState(0);
   const [userCreated, setUserCreated] = useState(false);
+  const [userId, setUserId] = useState<string>('');
 
   useEffect(() => {
     initializeUser();
@@ -23,25 +24,39 @@ export default function DashboardPage() {
 
   const initializeUser = async () => {
     try {
-      // Try to get existing user
-      const user = await api.getUser(DEMO_USER_ID);
-      setUserLevel(user.level);
-      setCurrentXP(user.currentXP);
+      // Try to get user ID from localStorage
+      let storedUserId = localStorage.getItem('skillbridge_user_id');
+      
+      if (storedUserId) {
+        // Try to fetch existing user
+        try {
+          const user = await api.getUser(storedUserId);
+          setUserId(storedUserId);
+          setUserLevel(user.level);
+          setCurrentXP(user.currentXP);
+          setUserCreated(true);
+          return;
+        } catch (error) {
+          // User doesn't exist, clear localStorage
+          localStorage.removeItem('skillbridge_user_id');
+        }
+      }
+      
+      // Create new user
+      const newUser = await api.createUser('demo_user_' + Date.now(), 'demo@skillbridge.com');
+      setUserId(newUser._id);
+      localStorage.setItem('skillbridge_user_id', newUser._id);
+      setUserLevel(newUser.level);
+      setCurrentXP(newUser.currentXP);
       setUserCreated(true);
     } catch (error) {
-      // User doesn't exist, create demo user
-      try {
-        await api.createUser('demo_user', 'demo@skillbridge.com');
-        setUserCreated(true);
-      } catch (createError) {
-        console.error('Failed to create user:', createError);
-      }
+      console.error('Failed to initialize user:', error);
     }
   };
 
   const handleXPGain = async (xpGained: number) => {
     try {
-      const data = await api.updateXP(DEMO_USER_ID, xpGained);
+      const data = await api.updateXP(userId, xpGained);
       setUserLevel(data.level);
       setCurrentXP(data.currentXP);
       
@@ -75,9 +90,9 @@ export default function DashboardPage() {
       <div className="h-[calc(100vh-4rem)] grid grid-cols-12 gap-4 p-4">
         {/* Left Sidebar - Skill Tree */}
         <div className="col-span-3 bg-gray-900/50 backdrop-blur-sm rounded-lg border-2 border-purple-500/20 overflow-hidden">
-          {userCreated && (
+          {userCreated && userId && (
             <SkillTree 
-              userId={DEMO_USER_ID} 
+              userId={userId} 
               onSkillSelect={setSelectedSkill}
             />
           )}
@@ -85,9 +100,9 @@ export default function DashboardPage() {
 
         {/* Center Panel - Mission Terminal */}
         <div className="col-span-6 overflow-hidden">
-          {userCreated && (
+          {userCreated && userId && (
             <MissionTerminal
-              userId={DEMO_USER_ID}
+              userId={userId}
               skillId={selectedSkill}
               onScoreUpdate={setCurrentScore}
               onXPGain={handleXPGain}

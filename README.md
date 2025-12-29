@@ -1,170 +1,245 @@
-# Skill-Bridge
+# Skill-Bridge: Autonomous Career Architect
 
-An AI-driven Interactive Simulation Platform where users "learn by doing" through realistic workplace scenarios.
+> **"LinkedIn tells you who you are. Skill-Bridge tells you who you need to become."**
 
-## 🚀 Tech Stack
+An AI-powered career transformation platform that analyzes your resume, compares it against your dream job, and creates a personalized learning roadmap to bridge the gap.
 
-- **Frontend**: Next.js 15, React, TypeScript, Tailwind CSS, Shadcn UI
-- **Backend**: Node.js, Express
+---
+
+## 🚀 Features
+
+### ✅ Phase 1: AI Skill Auditor (IMPLEMENTED)
+- **Resume Upload**: Drag-and-drop PDF/DOCX support
+- **AI Extraction**: Gemini-powered skill extraction
+- **Skill Heatmap**: Visual categorization (Technical, Tools, Soft Skills)
+- **Proficiency Levels**: 1-5 rating with evidence from resume
+
+### 🚧 Coming Next
+- **Phase 2**: Gap Analysis (compare resume vs job description)
+- **Phase 3**: Dynamic Roadmap Generation
+- **Phase 4**: On-Demand Micro-Tutorials
+- **Phase 5**: Hiring Readiness Score
+
+---
+
+## 📋 Prerequisites
+
+1. **Node.js** 18+ installed
+2. **MongoDB** running (local or Atlas)
+3. **Gemini API Key** (free tier available)
+
+### Get Gemini API Key
+1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Click "Create API Key"
+3. Copy the key
+
+---
+
+## 🛠️ Setup Instructions
+
+### 1. Clone and Install
+
+```bash
+# Navigate to project
+cd CATALYST
+
+# Install backend dependencies
+cd server
+npm install
+
+# Install frontend dependencies
+cd ../client
+npm install
+```
+
+### 2. Configure Environment Variables
+
+**Backend** (`server/.env`):
+```env
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/skill-bridge
+GEMINI_API_KEY=your_actual_gemini_api_key_here
+```
+
+**Frontend** (`client/.env.local`):
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+```
+
+### 3. Start the Servers
+
+**Terminal 1 - Backend**:
+```bash
+cd server
+npm run dev
+```
+
+**Terminal 2 - Frontend**:
+```bash
+cd client
+npm run dev
+```
+
+### 4. Open the App
+Navigate to: **http://localhost:3000**
+
+---
+
+## 🎯 How to Use
+
+### Step 1: Upload Resume
+1. Open http://localhost:3000
+2. Drag and drop your resume (PDF or DOCX)
+3. Click "Analyze Resume"
+4. Wait for AI to extract skills (~10-15 seconds)
+
+### Step 2: View Extracted Skills
+- See skills categorized by type
+- Check proficiency levels (Beginner → Expert)
+- Review evidence quotes from your resume
+
+### Step 3: Next Steps (Coming Soon)
+- Paste a job description
+- Get gap analysis
+- Generate personalized roadmap
+
+---
+
+## 🏗️ Tech Stack
+
+### Frontend
+- **Framework**: Next.js 15 (App Router)
+- **Styling**: Tailwind CSS + Shadcn UI
+- **Icons**: Lucide React
+- **Language**: TypeScript
+
+### Backend
+- **Runtime**: Node.js + Express
 - **Database**: MongoDB with Mongoose
-- **AI**: Mock LLM evaluation (ready for real LLM integration)
+- **AI**: Google Gemini 1.5 Flash
+- **File Processing**:
+  - `multer` - File uploads
+  - `pdf-parse` - PDF extraction
+  - `mammoth` - DOCX extraction
+
+---
 
 ## 📁 Project Structure
 
 ```
 CATALYST/
-├── client/          # Next.js frontend
-│   ├── app/         # App router pages
-│   ├── components/  # React components
-│   └── lib/         # Utilities and API client
-└── server/          # Express backend
-    ├── models/      # Mongoose models
-    └── routes/      # API routes
+├── client/                 # Next.js frontend
+│   ├── app/
+│   │   ├── upload/        # Resume upload page
+│   │   ├── analyze/       # Gap analysis (coming soon)
+│   │   ├── roadmap/       # Learning path (coming soon)
+│   │   └── dashboard/     # Old simulation (deprecated)
+│   ├── components/
+│   └── lib/
+└── server/                # Express backend
+    ├── models/
+    │   ├── User.js
+    │   ├── SkillTree.js
+    │   └── Simulation.js
+    ├── routes/
+    │   ├── resume.js      # ✅ NEW: Resume upload & extraction
+    │   ├── user.js
+    │   └── ...
+    └── index.js
 ```
 
-## 🛠️ Setup Instructions
+---
 
-### Prerequisites
-- Node.js 18+ installed
-- MongoDB running locally or connection string ready
+## 🔑 API Endpoints
 
-### Backend Setup
+### Resume Upload
+```http
+POST /api/resume/upload
+Content-Type: multipart/form-data
 
-1. Navigate to server directory:
-```bash
-cd server
+Body: { resume: File }
+
+Response: {
+  success: true,
+  skills: {
+    technical: [...],
+    soft: [...],
+    tools: [...]
+  },
+  totalSkills: 15
+}
 ```
 
-2. Install dependencies (already done):
-```bash
-npm install
-```
+---
 
-3. Configure environment variables:
-Edit `server/.env` and update MongoDB URI if needed:
-```
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/skill-bridge
-```
+## 🐛 Troubleshooting
 
-4. Start the server:
-```bash
-npm run dev
-```
+### "Failed to parse AI response"
+- **Cause**: Gemini API key not set or invalid
+- **Fix**: Check `server/.env` has correct `GEMINI_API_KEY`
 
-Server will run on `http://localhost:5000`
+### "MongoDB connection error"
+- **Cause**: MongoDB not running
+- **Fix**: Start MongoDB locally or use MongoDB Atlas connection string
 
-### Frontend Setup
+### "Port 3000 already in use"
+- **Cause**: Another Next.js instance running
+- **Fix**: Kill the process or use a different port
 
-1. Navigate to client directory:
-```bash
-cd client
-```
+---
 
-2. Install dependencies (already done):
-```bash
-npm install
-```
+## 🎨 Design Philosophy
 
-3. Start the development server:
-```bash
-npm run dev
-```
+- **Premium B2B SaaS** aesthetic
+- **Dark mode** with indigo/purple gradients
+- **Glassmorphism** effects
+- **Smooth animations** for engagement
+- **Mobile-responsive** (coming soon)
 
-Frontend will run on `http://localhost:3000`
+---
 
-## 🎮 Features
+## 📊 Current Status
 
-### Phase 1: Simulation Engine
-- Hardcoded demo missions for Project Management and Python
-- Mock AI evaluation with realistic feedback
-- Score calculation based on correctness, approach, and communication
+| Feature | Status |
+|---------|--------|
+| Resume Upload | ✅ Done |
+| Skill Extraction | ✅ Done |
+| Skill Categorization | ✅ Done |
+| Gap Analysis | 🚧 In Progress |
+| Roadmap Generation | ⏳ Planned |
+| Micro-Tutorials | ⏳ Planned |
+| Hiring Readiness Score | ⏳ Planned |
 
-### Phase 2: Data Schema
-- **Users**: Track levels, XP, and skill completion
-- **Skill Tree**: RPG-style progression with prerequisites
-- **Simulations**: Complete mission history with responses and feedback
+---
 
-### Phase 3: Mission Dashboard
-- **Left Panel**: Gamified skill tree with unlock system
-- **Center Panel**: Interactive mission terminal
-- **Right Panel**: Live AI feedback and XP progress
+## 🚀 Next Development Steps
 
-### Phase 4: Skill Passport
-- Shareable proof of competence
-- Statistics: missions completed, average score, skills mastered
-- Skill breakdown with performance metrics
-- Recent achievements timeline
+1. **Phase 2**: Job Description input and gap analysis
+2. **Phase 3**: Gemini-powered roadmap generation
+3. **Phase 4**: On-demand tutorial system
+4. **Phase 5**: Progress tracking and readiness score
 
-## 🎯 Demo Flow
+---
 
-1. Open `http://localhost:3000` (redirects to `/dashboard`)
-2. Select a skill from the Skill Tree (Project Management or Python)
-3. Read the mission brief and resources
-4. Submit your response in the terminal
-5. Receive AI feedback and score
-6. Complete the mission to earn XP and level up
-7. View your Skill Passport at `/passport/676ff8e8c4d5a1b2e3f4g5h6`
+## 📝 Notes
 
-## 🔐 Security
+- **Gemini API**: Free tier has rate limits (60 requests/minute)
+- **File Size**: Max 5MB for resume uploads
+- **Supported Formats**: PDF and DOCX only
+- **Processing Time**: ~10-15 seconds per resume
 
-- Environment variables for sensitive data (`.env` files)
-- `.gitignore` configured for both client and server
-- CORS enabled for local development
-
-## 📊 API Endpoints
-
-### User
-- `POST /api/user/create` - Create new user
-- `GET /api/user/:userId` - Get user details
-- `POST /api/user/update-xp` - Update user XP and level
-
-### Skill Tree
-- `GET /api/skill-tree/:userId` - Get user's skill tree
-- `POST /api/skill-tree/unlock` - Unlock a skill
-
-### Simulation
-- `POST /api/simulation/start` - Start new simulation
-- `POST /api/simulation/respond` - Submit response and get feedback
-- `POST /api/simulation/complete` - Complete simulation
-- `GET /api/simulation/history/:userId` - Get simulation history
-
-### Passport
-- `GET /api/passport/:userId` - Generate skill passport
-
-## 🎨 Design Highlights
-
-- **Premium B2B SaaS aesthetic** with gradient backgrounds
-- **Dark theme** with purple/pink accent colors
-- **Glassmorphism** effects and smooth animations
-- **Responsive** 3-column dashboard layout
-- **Real-time feedback** with animated progress bars
-
-## 🚀 Deployment Notes
-
-### Frontend (Vercel/Netlify)
-- Build command: `npm run build`
-- Output directory: `.next`
-- Environment variable: `NEXT_PUBLIC_API_URL`
-
-### Backend (Render/Railway/Heroku)
-- Start command: `npm start`
-- Environment variables: `PORT`, `MONGODB_URI`
-
-## 📝 Future Enhancements
-
-- Real LLM integration (OpenAI, Anthropic, or Gemini)
-- User authentication and authorization
-- PDF export for Skill Passport
-- Social sharing features
-- More skills and missions
-- Leaderboards and achievements
-- Video/audio response support
+---
 
 ## 🤝 Contributing
 
-This is a hackathon prototype. Feel free to extend and improve!
+This is a hackathon project. Feel free to fork and extend!
+
+---
 
 ## 📄 License
 
 MIT
+
+---
+
+**Built with ❤️ for the hackathon** 🏆
