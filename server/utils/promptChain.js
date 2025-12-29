@@ -2,6 +2,42 @@
 const { cacheWrapper, hashObject } = require('./cache');
 
 /**
+ * Retry wrapper for Gemini API calls with exponential backoff
+ * Handles rate limit errors (429) automatically
+ */
+async function retryWithBackoff(fn, maxRetries = 3) {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      // Check if it's a rate limit error
+      const isRateLimit = error.message?.includes('429') || 
+                          error.message?.includes('quota') ||
+                          error.message?.includes('Too Many Requests');
+      
+      if (!isRateLimit || attempt === maxRetries - 1) {
+        throw error; // Not a rate limit or last attempt, throw error
+      }
+
+      // Extract retry delay from error message if available
+      let retryDelay = 20000; // Default 20 seconds
+      const retryMatch = error.message?.match(/retry in ([\d.]+)s/i);
+      if (retryMatch) {
+        retryDelay = Math.ceil(parseFloat(retryMatch[1]) * 1000);
+      } else {
+        // Exponential backoff: 20s, 40s, 80s
+        retryDelay = 20000 * Math.pow(2, attempt);
+      }
+
+      console.log(`⏳ Rate limit hit. Retrying in ${retryDelay / 1000}s... (Attempt ${attempt + 1}/${maxRetries})`);
+      
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
+    }
+  }
+}
+
+
+/**
  * Chain Step 1: Prioritize skills by importance
  * Fast, cacheable, ~200 tokens output
  */
@@ -23,7 +59,9 @@ Consider:
 2. Prerequisite dependencies
 3. Learning difficulty vs. value`;
 
-      const result = await model.generateContent(prompt);
+      const result = await retryWithBackoff(async () => {
+        return await model.generateContent(prompt);
+      });
       const response = result.response.text().trim();
       
       // Clean markdown code blocks
@@ -84,7 +122,9 @@ Rules:
 3. Practice projects must be concrete and achievable
 4. Milestones are measurable outcomes`;
 
-      const result = await model.generateContent(prompt);
+      const result = await retryWithBackoff(async () => {
+        return await model.generateContent(prompt);
+      });
       const response = result.response.text().trim();
       
       let jsonText = response;
@@ -166,7 +206,9 @@ Requirements:
 3. Prefer official documentation and reputable sources
 4. Include variety (video + docs + practice)`;
 
-      const result = await model.generateContent(prompt);
+      const result = await retryWithBackoff(async () => {
+        return await model.generateContent(prompt);
+      });
       const response = result.response.text().trim();
       
       let jsonText = response;
