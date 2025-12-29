@@ -20,11 +20,19 @@ const simulationRoutes = require('./routes/simulation');
 const userRoutes = require('./routes/user');
 const skillTreeRoutes = require('./routes/skillTree');
 const passportRoutes = require('./routes/passport');
+const resumeRoutes = require('./routes/resume');
+const analyzeRoutes = require('./routes/analyze');
+const roadmapRoutes = require('./routes/roadmap');
+const testGeminiRoutes = require('./routes/test-gemini');
 
 app.use('/api/simulation', simulationRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/skill-tree', skillTreeRoutes);
 app.use('/api/passport', passportRoutes);
+app.use('/api/resume', resumeRoutes);
+app.use('/api/analyze', analyzeRoutes);
+app.use('/api/roadmap', roadmapRoutes);
+app.use('/api/test-gemini', testGeminiRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
