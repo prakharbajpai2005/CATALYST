@@ -19,12 +19,15 @@ interface Resource {
 interface WeekPlan {
   week: number;
   title: string;
-  skills: string[];
+  skill?: string; // Backend returns singular skill
+  skills?: string[]; // Legacy support for array
+  topics?: string[];
   estimatedHours: number;
   resources: Resource[];
   practiceProject: string;
   milestones: string[];
   completed?: boolean;
+  isPlaceholder?: boolean; // For progressive loading
 }
 
 interface Roadmap {
@@ -40,6 +43,7 @@ export default function RoadmapPage() {
   const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
   const [hoursPerWeek, setHoursPerWeek] = useState(10);
   const [error, setError] = useState('');
+  const [loadingMessage, setLoadingMessage] = useState('Initializing...');
 
   const handleGenerate = async () => {
     const gapAnalysis = localStorage.getItem('gap_analysis');
@@ -150,7 +154,7 @@ export default function RoadmapPage() {
                 {loading ? (
                   <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Generating Your Roadmap...
+                    {loadingMessage || 'Generating Your Roadmap...'}
                   </>
                 ) : (
                   <>
@@ -205,27 +209,36 @@ export default function RoadmapPage() {
                   key={idx} 
                   className={`
                     bg-gray-900/50 border-2 transition-all
-                    ${week.completed ? 'border-green-500/30 opacity-75' : 'border-gray-700'}
+                    ${week.isPlaceholder ? 'border-blue-500/20 opacity-60 animate-pulse' : 
+                      week.completed ? 'border-green-500/30 opacity-75' : 'border-gray-700'}
                   `}
                 >
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <Button
-                            onClick={() => toggleWeekCompletion(idx)}
-                            variant="ghost"
-                            size="sm"
-                            className="p-0 h-auto"
-                          >
-                            {week.completed ? (
-                              <CheckCircle2 className="w-6 h-6 text-green-400" />
-                            ) : (
-                              <Circle className="w-6 h-6 text-gray-600" />
-                            )}
-                          </Button>
+                          {week.isPlaceholder ? (
+                            <Loader2 className="w-6 h-6 text-blue-400 animate-spin" />
+                          ) : (
+                            <Button
+                              onClick={() => toggleWeekCompletion(idx)}
+                              variant="ghost"
+                              size="sm"
+                              className="p-0 h-auto"
+                            >
+                              {week.completed ? (
+                                <CheckCircle2 className="w-6 h-6 text-green-400" />
+                              ) : (
+                                <Circle className="w-6 h-6 text-gray-600" />
+                              )}
+                            </Button>
+                          )}
                           <div>
-                            <Badge variant="outline" className="bg-indigo-500/20 text-indigo-400 border-indigo-500/50">
+                            <Badge variant="outline" className={`
+                              ${week.isPlaceholder 
+                                ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' 
+                                : 'bg-indigo-500/20 text-indigo-400 border-indigo-500/50'}
+                            `}>
                               Week {week.week}
                             </Badge>
                           </div>
@@ -233,67 +246,71 @@ export default function RoadmapPage() {
                         <CardTitle className={week.completed ? 'line-through text-gray-500' : ''}>
                           {week.title}
                         </CardTitle>
-                        <CardDescription className="flex items-center gap-4 mt-2">
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {week.estimatedHours} hours
-                          </span>
-                          <span>Skills: {week.skills.join(', ')}</span>
-                        </CardDescription>
+                        {!week.isPlaceholder && (
+                          <CardDescription className="flex items-center gap-4 mt-2">
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-4 h-4" />
+                              {week.estimatedHours} hours
+                            </span>
+                            <span>Skills: {Array.isArray(week.skills) ? week.skills.join(', ') : (week as any).skill || 'N/A'}</span>
+                          </CardDescription>
+                        )}
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    {/* Resources */}
-                    <div>
-                      <h4 className="font-semibold mb-2">📚 Learning Resources</h4>
-                      <div className="space-y-2">
-                        {week.resources.map((resource, rIdx) => (
-                          <a
-                            key={rIdx}
-                            href={resource.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-between p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg border border-gray-700 hover:border-indigo-500/50 transition-all"
-                          >
-                            <div className="flex items-center gap-3">
-                              <span className="text-2xl">{getResourceIcon(resource.type)}</span>
-                              <div>
-                                <div className="font-medium">{resource.title}</div>
-                                <div className="text-xs text-gray-500">{resource.type} • {resource.duration}</div>
-                              </div>
-                            </div>
-                            <ExternalLink className="w-4 h-4 text-gray-500" />
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-
-                    <Separator className="bg-gray-700" />
-
-                    {/* Practice Project */}
-                    <div>
-                      <h4 className="font-semibold mb-2">🛠️ Practice Project</h4>
-                      <div className="p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg">
-                        {week.practiceProject}
-                      </div>
-                    </div>
-
-                    {/* Milestones */}
-                    {week.milestones && week.milestones.length > 0 && (
+                  {!week.isPlaceholder && (
+                    <CardContent className="space-y-4">
+                      {/* Resources */}
                       <div>
-                        <h4 className="font-semibold mb-2">🎯 Milestones</h4>
-                        <ul className="space-y-1">
-                          {week.milestones.map((milestone, mIdx) => (
-                            <li key={mIdx} className="text-sm text-gray-400 flex items-center gap-2">
-                              <span className="text-green-400">✓</span>
-                              {milestone}
-                            </li>
+                        <h4 className="font-semibold mb-2">📚 Learning Resources</h4>
+                        <div className="space-y-2">
+                          {week.resources.map((resource, rIdx) => (
+                            <a
+                              key={rIdx}
+                              href={resource.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-between p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg border border-gray-700 hover:border-indigo-500/50 transition-all"
+                            >
+                              <div className="flex items-center gap-3">
+                                <span className="text-2xl">{getResourceIcon(resource.type)}</span>
+                                <div>
+                                  <div className="font-medium">{resource.title}</div>
+                                  <div className="text-xs text-gray-500">{resource.type} • {resource.duration}</div>
+                                </div>
+                              </div>
+                              <ExternalLink className="w-4 h-4 text-gray-500" />
+                            </a>
                           ))}
-                        </ul>
+                        </div>
                       </div>
-                    )}
-                  </CardContent>
+
+                      <Separator className="bg-gray-700" />
+
+                      {/* Practice Project */}
+                      <div>
+                        <h4 className="font-semibold mb-2">🛠️ Practice Project</h4>
+                        <div className="p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+                          {week.practiceProject}
+                        </div>
+                      </div>
+
+                      {/* Milestones */}
+                      {week.milestones && week.milestones.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold mb-2">🎯 Milestones</h4>
+                          <ul className="space-y-1">
+                            {week.milestones.map((milestone: string, mIdx: number) => (
+                              <li key={mIdx} className="text-sm text-gray-400 flex items-center gap-2">
+                                <span className="text-green-400">✓</span>
+                                {milestone}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </CardContent>
+                  )}
                 </Card>
               ))}
             </div>

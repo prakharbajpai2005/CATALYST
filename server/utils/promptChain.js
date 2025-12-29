@@ -1,47 +1,12 @@
 // Prompt chaining utilities for breaking large prompts into smaller, cacheable chunks
 const { cacheWrapper, hashObject } = require('./cache');
-
-/**
- * Retry wrapper for Gemini API calls with exponential backoff
- * Handles rate limit errors (429) automatically
- */
-async function retryWithBackoff(fn, maxRetries = 3) {
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      return await fn();
-    } catch (error) {
-      // Check if it's a rate limit error
-      const isRateLimit = error.message?.includes('429') || 
-                          error.message?.includes('quota') ||
-                          error.message?.includes('Too Many Requests');
-      
-      if (!isRateLimit || attempt === maxRetries - 1) {
-        throw error; // Not a rate limit or last attempt, throw error
-      }
-
-      // Extract retry delay from error message if available
-      let retryDelay = 20000; // Default 20 seconds
-      const retryMatch = error.message?.match(/retry in ([\d.]+)s/i);
-      if (retryMatch) {
-        retryDelay = Math.ceil(parseFloat(retryMatch[1]) * 1000);
-      } else {
-        // Exponential backoff: 20s, 40s, 80s
-        retryDelay = 20000 * Math.pow(2, attempt);
-      }
-
-      console.log(`⏳ Rate limit hit. Retrying in ${retryDelay / 1000}s... (Attempt ${attempt + 1}/${maxRetries})`);
-      
-      await new Promise(resolve => setTimeout(resolve, retryDelay));
-    }
-  }
-}
-
+const { generateContent, retryWithBackoff } = require('./openrouter');
 
 /**
  * Chain Step 1: Prioritize skills by importance
  * Fast, cacheable, ~200 tokens output
  */
-async function prioritizeSkills(model, skillGaps) {
+async function prioritizeSkills(skillGaps) {
   const cacheKey = `priority:${hashObject(skillGaps)}`;
   
   const { data, fromCache } = await cacheWrapper(
@@ -59,13 +24,12 @@ Consider:
 2. Prerequisite dependencies
 3. Learning difficulty vs. value`;
 
-      const result = await retryWithBackoff(async () => {
-        return await model.generateContent(prompt);
+      const response = await retryWithBackoff(async () => {
+        return await generateContent(prompt);
       });
-      const response = result.response.text().trim();
       
       // Clean markdown code blocks
-      let jsonText = response;
+      let jsonText = response.trim();
       if (jsonText.startsWith('```json')) {
         jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
       } else if (jsonText.startsWith('```')) {
@@ -83,7 +47,7 @@ Consider:
  * Chain Step 2: Generate weekly structure
  * Medium complexity, ~500 tokens output
  */
-async function generateWeeklyStructure(model, priorities, targetRole, hoursPerWeek) {
+async function generateWeeklyStructure(priorities, targetRole, hoursPerWeek) {
   const cacheKey = `weeks:${hashObject({ priorities, targetRole, hoursPerWeek })}`;
   
   const { data, fromCache } = await cacheWrapper(
@@ -118,12 +82,11 @@ Rules:
 3. Practice projects must be concrete and achievable
 4. Milestones are measurable outcomes`;
 
-      const result = await retryWithBackoff(async () => {
-        return await model.generateContent(prompt);
+      const response = await retryWithBackoff(async () => {
+        return await generateContent(prompt);
       });
-      const response = result.response.text().trim();
       
-      let jsonText = response;
+      let jsonText = response.trim();
       if (jsonText.startsWith('```json')) {
         jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
       } else if (jsonText.startsWith('```')) {
@@ -170,7 +133,7 @@ Rules:
  * Chain Step 3: Fetch resources for a single week
  * Small, highly cacheable, ~300 tokens output
  */
-async function fetchWeekResources(model, week) {
+async function fetchWeekResources(week) {
   const cacheKey = `resources:${hashObject(week)}`;
   
   const { data, fromCache } = await cacheWrapper(
@@ -198,12 +161,11 @@ Requirements:
 3. Prefer official documentation and reputable sources
 4. Include variety (video + docs + practice)`;
 
-      const result = await retryWithBackoff(async () => {
-        return await model.generateContent(prompt);
+      const response = await retryWithBackoff(async () => {
+        return await generateContent(prompt);
       });
-      const response = result.response.text().trim();
       
-      let jsonText = response;
+      let jsonText = response.trim();
       if (jsonText.startsWith('```json')) {
         jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
       } else if (jsonText.startsWith('```')) {
@@ -221,25 +183,70 @@ Requirements:
  * Main chained roadmap generation
  * Combines all steps with parallel resource fetching
  */
-async function generateChainedRoadmap(model, skillGaps, targetRole, hoursPerWeek) {
+async function generateChainedRoadmap(skillGaps, targetRole, hoursPerWeek) {
   console.log('🔗 Starting chained roadmap generation...');
   const startTime = Date.now();
 
   try {
-    // Step 1: Prioritize skills (1-2 seconds)
+    // Step 1: Prioritize skills
     console.log('📊 Step 1/3: Prioritizing skills...');
-    const priorities = await prioritizeSkills(model, skillGaps);
+    const priorities = await prioritizeSkills(skillGaps);
     console.log(`✅ Prioritized ${priorities.length} skills`);
 
-    // Step 2: Generate weekly structure (2-3 seconds)
-    console.log('📅 Step 2/3: Generating weekly structure...');
-    const weeks = await generateWeeklyStructure(model, priorities, targetRole, hoursPerWeek);
+    // Step 2: Generate 6-week structure
+    console.log('📅 Step 2/3: Generating 6-week structure...');
+    
+    // Create custom prompt for 6 weeks
+    const cacheKey = `weeks:${hashObject({ priorities: priorities.slice(0, 6), targetRole, hoursPerWeek })}`;
+    const { data: weeks } = await cacheWrapper(
+      cacheKey,
+      7 * 24 * 60 * 60,
+      async () => {
+        const prompt = `Create a FOCUSED 6-week learning roadmap for: ${targetRole}
+
+Priority skills (top 6):
+${priorities.slice(0, 6).join('\n')}
+
+Time: ${hoursPerWeek}h/week
+
+Return ONLY JSON array of EXACTLY 6 weeks:
+[{
+  "week": 1,
+  "title": "Week title",
+  "skill": "Skill name",
+  "topics": ["topic1", "topic2", "topic3"],
+  "estimatedHours": ${hoursPerWeek},
+  "practiceProject": "Project description",
+  "milestones": ["milestone1", "milestone2"]
+}]`;
+
+        const response = await retryWithBackoff(async () => {
+          return await generateContent(prompt);
+        });
+
+        let jsonText = response.trim();
+        if (jsonText.startsWith('```json')) {
+          jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+        } else if (jsonText.startsWith('```')) {
+          jsonText = jsonText.replace(/```\n?/g, '');
+        }
+
+        return JSON.parse(jsonText);
+      }
+    );
+    
     console.log(`✅ Generated ${weeks.length} weeks`);
 
-    // Step 3: Fetch resources in parallel (3-4 seconds total, not per week!)
-    console.log('📚 Step 3/3: Fetching resources (parallel)...');
-    const resourcePromises = weeks.map(week => fetchWeekResources(model, week));
-    const resources = await Promise.all(resourcePromises);
+    // Step 3: Fetch resources for all weeks (no delays - let API handle rate limits)
+    console.log('📚 Step 3/3: Fetching resources...');
+    const resources = [];
+    
+    for (let i = 0; i < weeks.length; i++) {
+      console.log(`📖 Fetching resources for Week ${i + 1}/${weeks.length}...`);
+      const weekResources = await fetchWeekResources(weeks[i]);
+      resources.push(weekResources);
+    }
+    
     console.log(`✅ Fetched resources for ${resources.length} weeks`);
 
     // Combine results
@@ -270,9 +277,110 @@ async function generateChainedRoadmap(model, skillGaps, targetRole, hoursPerWeek
   }
 }
 
+/**
+ * Progressive roadmap generation - streams weeks as they're generated
+ * Returns Week 1 immediately, then generates rest in background
+ */
+async function generateProgressiveRoadmap(skillGaps, targetRole, hoursPerWeek, onProgress) {
+  console.log('🚀 Starting PROGRESSIVE roadmap generation (6 weeks)...');
+  const startTime = Date.now();
+
+  try {
+    // Step 1: Prioritize skills
+    onProgress('status', { message: 'Analyzing skill gaps...' });
+    const priorities = await prioritizeSkills(skillGaps);
+    
+    // Step 2: Generate 6-week structure (reduced from 12-18)
+    onProgress('status', { message: 'Creating learning path...' });
+    
+    // Modified prompt for 6 weeks only
+    const weekPrompt = `Create a FOCUSED 6-week learning roadmap for: ${targetRole}
+
+Priority skills (top 6):
+${priorities.slice(0, 6).join('\n')}
+
+Time: ${hoursPerWeek}h/week
+
+Return ONLY JSON array of EXACTLY 6 weeks:
+[{
+  "week": 1,
+  "title": "Week title",
+  "skill": "Skill name",
+  "topics": ["topic1", "topic2", "topic3"],
+  "estimatedHours": ${hoursPerWeek},
+  "practiceProject": "Project description",
+  "milestones": ["milestone1", "milestone2"]
+}]`;
+
+    const weeksResponse = await retryWithBackoff(async () => {
+      return await generateContent(weekPrompt);
+    });
+
+    let jsonText = weeksResponse.trim();
+    if (jsonText.startsWith('```json')) {
+      jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+    } else if (jsonText.startsWith('```')) {
+      jsonText = jsonText.replace(/```\n?/g, '');
+    }
+
+    const weeks = JSON.parse(jsonText);
+    
+    // Step 3: Fetch resources for Week 1 IMMEDIATELY
+    onProgress('status', { message: 'Fetching resources for Week 1...' });
+    const week1Resources = await fetchWeekResources(weeks[0]);
+    
+    // Send Week 1 to client IMMEDIATELY
+    const week1Complete = {
+      ...weeks[0],
+      resources: week1Resources
+    };
+    
+    onProgress('week', { 
+      week: week1Complete,
+      totalWeeks: 6,
+      currentWeek: 1
+    });
+
+    // Step 4: Generate remaining weeks in background with shorter delays
+    for (let i = 1; i < weeks.length; i++) {
+      const week = weeks[i];
+      
+      // Shorter delay for better UX (10s instead of 15s)
+      onProgress('status', { message: `Generating Week ${i + 1}/6...` });
+      await new Promise(resolve => setTimeout(resolve, 10000));
+      
+      const weekResources = await fetchWeekResources(week);
+      const weekComplete = {
+        ...week,
+        resources: weekResources
+      };
+      
+      onProgress('week', {
+        week: weekComplete,
+        totalWeeks: 6,
+        currentWeek: i + 1
+      });
+    }
+
+    const elapsedTime = ((Date.now() - startTime) / 1000).toFixed(2);
+    console.log(`✅ Progressive roadmap completed in ${elapsedTime}s`);
+    
+    onProgress('complete', {
+      totalWeeks: 6,
+      generationTime: elapsedTime
+    });
+
+  } catch (error) {
+    console.error('❌ Progressive roadmap failed:', error);
+    onProgress('error', { message: error.message });
+    throw error;
+  }
+}
+
 module.exports = {
   prioritizeSkills,
   generateWeeklyStructure,
   fetchWeekResources,
-  generateChainedRoadmap
+  generateChainedRoadmap,
+  generateProgressiveRoadmap
 };
