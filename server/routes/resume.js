@@ -106,12 +106,6 @@ Return ONLY valid JSON in this exact format:
     }
   );
 
-  if (fromCache) {
-    console.log('💰 Cache HIT: Saved ~$0.03 on skill extraction');
-  } else {
-    console.log('💸 Cache MISS: Called LLM for skill extraction (~$0.03)');
-  }
-
   return skills;
 }
 

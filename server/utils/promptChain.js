@@ -76,10 +76,6 @@ Consider:
     }
   );
 
-  if (fromCache) {
-    console.log('💰 Saved ~$0.01 from cache (skill prioritization)');
-  }
-
   return data;
 }
 
@@ -167,10 +163,6 @@ Rules:
     }
   );
 
-  if (fromCache) {
-    console.log('💰 Saved ~$0.02 from cache (weekly structure)');
-  }
-
   return data;
 }
 
@@ -221,10 +213,6 @@ Requirements:
       return JSON.parse(jsonText);
     }
   );
-
-  if (fromCache) {
-    console.log('💰 Saved ~$0.01 from cache (resources)');
-  }
 
   return data;
 }

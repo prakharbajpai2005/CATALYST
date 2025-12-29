@@ -106,17 +106,10 @@ Return ONLY valid JSON in this format:
       }
     );
 
-    if (fromCache) {
-      console.log('💰 Cache HIT: Saved ~$0.05 on gap analysis');
-    } else {
-      console.log('💸 Cache MISS: Called LLM for gap analysis (~$0.05)');
-    }
-
     res.json({
       success: true,
       analysis,
-      timestamp: new Date(),
-      cached: fromCache
+      timestamp: new Date()
     });
 
   } catch (error) {
