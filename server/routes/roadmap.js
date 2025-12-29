@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { generateChainedRoadmap } = require('../utils/promptChain');
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -20,83 +21,19 @@ router.post('/generate', async (req, res) => {
       model: 'gemini-2.5-flash'
     });
 
-    const prompt = `You are a personalized learning roadmap generator. Create a week-by-week learning plan.
+    // Use chained prompt generation for better performance and caching
+    const roadmap = await generateChainedRoadmap(
+      model,
+      skillGaps,
+      targetRole,
+      hoursPerWeek
+    );
 
-SKILL GAPS TO ADDRESS:
-${JSON.stringify(skillGaps, null, 2)}
-
-TARGET ROLE: ${targetRole || 'Not specified'}
-AVAILABLE TIME: ${hoursPerWeek} hours per week
-
-Create a realistic, actionable roadmap that:
-1. Prioritizes high-importance skills first
-2. Breaks learning into weekly chunks
-3. Suggests FREE resources (YouTube, documentation, articles, free courses)
-4. Includes practice projects/exercises
-5. Has realistic time estimates
-
-Return ONLY valid JSON in this format:
-{
-  "totalWeeks": 12,
-  "totalHours": 120,
-  "weeklyPlan": [
-    {
-      "week": 1,
-      "title": "React Fundamentals",
-      "skills": ["React", "JSX", "Components"],
-      "estimatedHours": 10,
-      "resources": [
-        {
-          "title": "React Official Tutorial",
-          "url": "https://react.dev/learn",
-          "type": "documentation",
-          "duration": "3 hours"
-        },
-        {
-          "title": "React Crash Course",
-          "url": "https://youtube.com/...",
-          "type": "video",
-          "duration": "2 hours"
-        }
-      ],
-      "practiceProject": "Build a simple todo app",
-      "milestones": ["Understand components", "Create first React app"]
-    }
-  ],
-  "milestones": [
-    {
-      "week": 4,
-      "title": "Complete React Basics",
-      "description": "Build a full CRUD application"
-    }
-  ]
-}`;
-
-    const result = await model.generateContent(prompt);
-    const response = result.response.text();
-
-    // Clean up response
-    let jsonText = response.trim();
-    if (jsonText.startsWith('```json')) {
-      jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
-    } else if (jsonText.startsWith('```')) {
-      jsonText = jsonText.replace(/```\n?/g, '');
-    }
-
-    try {
-      const roadmap = JSON.parse(jsonText);
-      
-      res.json({
-        success: true,
-        roadmap,
-        generatedAt: new Date()
-      });
-
-    } catch (parseError) {
-      console.error('Failed to parse Gemini response:', parseError);
-      console.error('Response was:', jsonText);
-      throw new Error('Failed to parse AI roadmap');
-    }
+    res.json({
+      success: true,
+      roadmap,
+      generatedAt: new Date()
+    });
 
   } catch (error) {
     console.error('Roadmap generation error:', error);

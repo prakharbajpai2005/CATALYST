@@ -15,6 +15,7 @@ mongoose.connect(MONGODB_URI)
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch((err) => console.error('❌ MongoDB connection error:', err));
 
+
 // Routes
 const simulationRoutes = require('./routes/simulation');
 const userRoutes = require('./routes/user');

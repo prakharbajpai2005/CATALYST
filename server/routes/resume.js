@@ -4,6 +4,7 @@ const multer = require('multer');
 const pdfParse = require('pdf-parse');
 const mammoth = require('mammoth');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { cacheWrapper, hashObject } = require('../utils/cache');
 
 // Configure multer for file uploads
 const storage = multer.memoryStorage();
@@ -40,13 +41,20 @@ async function extractTextFromDOCX(buffer) {
   return result.value;
 }
 
-// Extract skills using Gemini
+// Extract skills using Gemini with caching
 async function extractSkillsWithAI(resumeText) {
-  const model = genAI.getGenerativeModel({ 
-    model: 'gemini-2.5-flash'
-  });
+  // Generate cache key from resume content hash
+  const cacheKey = `skills:${hashObject(resumeText)}`;
+  
+  const { data: skills, fromCache } = await cacheWrapper(
+    cacheKey,
+    30 * 24 * 60 * 60, // Cache for 30 days
+    async () => {
+      const model = genAI.getGenerativeModel({ 
+        model: 'gemini-2.5-flash'
+      });
 
-  const prompt = `You are a resume skill extractor. Analyze this resume and extract skills.
+      const prompt = `You are a resume skill extractor. Analyze this resume and extract skills.
 
 Resume Text:
 ${resumeText}
@@ -74,27 +82,31 @@ Return ONLY valid JSON in this exact format:
   ]
 }`;
 
-  const result = await model.generateContent(prompt);
-  const response = result.response.text();
-  
-  // Clean up the response to extract JSON
-  let jsonText = response.trim();
-  
-  // Remove markdown code blocks if present
-  if (jsonText.startsWith('```json')) {
-    jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
-  } else if (jsonText.startsWith('```')) {
-    jsonText = jsonText.replace(/```\n?/g, '');
-  }
-  
-  try {
-    const parsed = JSON.parse(jsonText);
-    return parsed.skills || [];
-  } catch (error) {
-    console.error('Failed to parse Gemini response:', error);
-    console.error('Response was:', jsonText);
-    throw new Error('Failed to parse AI response');
-  }
+      const result = await model.generateContent(prompt);
+      const response = result.response.text();
+      
+      // Clean up the response to extract JSON
+      let jsonText = response.trim();
+      
+      // Remove markdown code blocks if present
+      if (jsonText.startsWith('```json')) {
+        jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+      } else if (jsonText.startsWith('```')) {
+        jsonText = jsonText.replace(/```\n?/g, '');
+      }
+      
+      try {
+        const parsed = JSON.parse(jsonText);
+        return parsed.skills || [];
+      } catch (error) {
+        console.error('Failed to parse Gemini response:', error);
+        console.error('Response was:', jsonText);
+        throw new Error('Failed to parse AI response');
+      }
+    }
+  );
+
+  return skills;
 }
 
 // Upload and analyze resume
