@@ -1,10 +1,45 @@
 const express = require('express');
 const router = express.Router();
-const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { generateChainedRoadmap } = require('../utils/promptChain');
 
-// Initialize Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Progressive roadmap generation - streams weeks as they're generated
+router.post('/generate-progressive', async (req, res) => {
+  try {
+    const { skillGaps, targetRole, availableHoursPerWeek } = req.body;
+
+    if (!skillGaps || skillGaps.length === 0) {
+      return res.status(400).json({ error: 'Skill gaps are required' });
+    }
+
+    const hoursPerWeek = availableHoursPerWeek || 10;
+
+    // Set headers for Server-Sent Events
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    const { generateProgressiveRoadmap } = require('../utils/promptChain');
+
+    // Generate roadmap with progress callbacks
+    await generateProgressiveRoadmap(
+      skillGaps,
+      targetRole,
+      hoursPerWeek,
+      (event, data) => {
+        // Stream each event to client
+        res.write(`data: ${JSON.stringify({ event, data })}\n\n`);
+      }
+    );
+
+    res.write(`data: ${JSON.stringify({ event: 'complete' })}\n\n`);
+    res.end();
+
+  } catch (error) {
+    console.error('Progressive roadmap error:', error);
+    res.write(`data: ${JSON.stringify({ event: 'error', error: error.message })}\n\n`);
+    res.end();
+  }
+});
 
 // Generate personalized learning roadmap
 router.post('/generate', async (req, res) => {
@@ -17,13 +52,8 @@ router.post('/generate', async (req, res) => {
 
     const hoursPerWeek = availableHoursPerWeek || 10; // Default 10 hours/week
 
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-2.5-flash'
-    });
-
-    // Use chained prompt generation for better performance and caching
+    // Use chained prompt generation with OpenRouter
     const roadmap = await generateChainedRoadmap(
-      model,
       skillGaps,
       targetRole,
       hoursPerWeek

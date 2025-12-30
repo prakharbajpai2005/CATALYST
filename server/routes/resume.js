@@ -3,8 +3,8 @@ const router = express.Router();
 const multer = require('multer');
 const pdfParse = require('pdf-parse');
 const mammoth = require('mammoth');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { cacheWrapper, hashObject } = require('../utils/cache');
+const { generateContent } = require('../utils/openrouter');
 
 // Configure multer for file uploads
 const storage = multer.memoryStorage();
@@ -21,8 +21,7 @@ const upload = multer({
   }
 });
 
-// Initialize Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
 
 // Extract text from PDF
 async function extractTextFromPDF(buffer) {
@@ -50,40 +49,24 @@ async function extractSkillsWithAI(resumeText) {
     cacheKey,
     30 * 24 * 60 * 60, // Cache for 30 days
     async () => {
-      const model = genAI.getGenerativeModel({ 
-        model: 'gemini-2.5-flash'
-      });
+      const prompt = `Analyze this resume and extract ALL technical and soft skills. Return ONLY a JSON object with a "skills" array.
 
-      const prompt = `You are a resume skill extractor. Analyze this resume and extract skills.
-
-Resume Text:
+Resume:
 ${resumeText}
 
-Extract and categorize skills into:
-1. Technical Skills (programming languages, frameworks, databases, cloud platforms)
-2. Soft Skills (leadership, communication, problem-solving, teamwork)
-3. Tools & Technologies (Git, Docker, Kubernetes, CI/CD tools, etc.)
-
-For each skill, provide:
-- name: The skill name
-- category: One of "technical", "soft", or "tools"
-- proficiency: Estimated level from 1-5 based on context (1=beginner, 5=expert)
-- evidence: Brief quote or context from resume showing this skill
-
-Return ONLY valid JSON in this exact format:
+Return format:
 {
   "skills": [
     {
-      "name": "Python",
-      "category": "technical",
-      "proficiency": 4,
-      "evidence": "3 years of Python development"
+      "name": "Skill Name",
+      "category": "technical" | "soft" | "tools",
+      "proficiency": 1-5,
+      "evidence": "Brief context from resume"
     }
   ]
 }`;
 
-      const result = await model.generateContent(prompt);
-      const response = result.response.text();
+      const response = await generateContent(prompt);
       
       // Clean up the response to extract JSON
       let jsonText = response.trim();

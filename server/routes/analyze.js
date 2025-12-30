@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { cacheWrapper, hashObject } = require('../utils/cache');
+const { generateContent } = require('../utils/openrouter');
 
-// Initialize Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
 
 // Analyze gap between current skills and job requirements
 router.post('/gap', async (req, res) => {

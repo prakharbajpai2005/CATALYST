@@ -1,0 +1,1272 @@
+================================================================================
+                        SKILL-BRIDGE PROTOTYPE CONTEXT
+                     Complete UI/UX Documentation (Text Format)
+================================================================================
+
+PROJECT OVERVIEW
+================================================================================
+
+Skill-Bridge is an AI-powered career development platform that helps users 
+bridge the gap between their current skills and their dream job.
+
+TECH STACK:
+- Frontend: Next.js 14, React, TypeScript, TailwindCSS
+- Backend: Node.js, Express, MongoDB
+- AI: OpenRouter API (GPT-3.5 Turbo)
+- Styling: Dark mode, glassmorphism, neon accents
+
+DESIGN PHILOSOPHY:
+- Dark mode with deep purple/indigo gradients
+- Glassmorphic cards with frosted glass effect
+- Neon accent colors (cyan, purple, indigo)
+- Premium SaaS aesthetic with smooth animations
+- Mobile-first responsive design
+
+COLOR PALETTE:
+- Background: Dark gradient (gray-950 → indigo-950 → gray-950)
+- Primary: Indigo (indigo-400, indigo-500, indigo-600)
+- Secondary: Purple (purple-400, purple-500)
+- Accent: Cyan (cyan-400), Pink (pink-400)
+- Success: Green (green-400)
+- Warning: Yellow (yellow-400)
+- Error: Red (red-400)
+
+
+================================================================================
+PAGE 1: HOME PAGE (/)
+================================================================================
+
+PURPOSE:
+Landing page that introduces the platform and its core features.
+
+LAYOUT:
+Full-screen hero section with centered content, followed by feature cards.
+
+DETAILED COMPONENTS:
+--------------------------------------------------------------------------------
+
+1. HERO SECTION
+   Location: Top of page, full viewport height
+   
+   Components:
+   - Main Heading (H1)
+     * Text: "Skill-Bridge"
+     * Style: Extra large (text-6xl), gradient text
+     * Gradient: Indigo-400 to Purple-400
+     * Animation: Fade-in on load
+   
+   - Tagline (H2)
+     * Text: "Bridge the gap between your skills and your dream job"
+     * Style: Large (text-3xl), light gray (gray-300)
+     * Position: Below main heading, centered
+   
+   - Description Paragraph
+     * Text: Explains AI-powered analysis and personalized roadmaps
+     * Style: Medium (text-lg), gray-400
+     * Max width: 600px, centered
+   
+   - CTA Button
+     * Text: "Get Started →"
+     * Style: Large button, gradient background (indigo-600 to purple-600)
+     * Size: Padding 16px 48px, rounded-lg
+     * Hover: Scale 1.05, glow effect
+     * Click: Navigates to /upload
+
+2. FEATURE CARDS SECTION
+   Location: Below hero, grid layout
+   
+   Grid Structure:
+   - Desktop: 2x2 grid
+   - Tablet: 2x2 grid
+   - Mobile: 1 column
+   
+   Each Feature Card Contains:
+   
+   Card 1: AI Resume Analysis
+   - Icon: Document icon (📄) in cyan color, size 48px
+   - Title: "AI Resume Analysis"
+     * Style: text-xl, font-semibold, white
+   - Description: "Upload your resume and let AI extract your skills automatically"
+     * Style: text-sm, gray-400
+   - Background: Glassmorphic card (bg-gray-900/50, backdrop-blur)
+   - Border: 2px solid gray-700, rounded-xl
+   - Padding: 24px
+   - Hover: Border glows cyan, translateY -4px
+   
+   Card 2: Skill Gap Identification
+   - Icon: Chart icon (📊) in purple color, size 48px
+   - Title: "Skill Gap Identification"
+   - Description: "Compare your skills with job requirements and get a readiness score"
+   - Same styling as Card 1
+   - Hover: Border glows purple
+   
+   Card 3: Personalized Roadmaps
+   - Icon: Map icon (🗺️) in indigo color, size 48px
+   - Title: "Personalized Roadmaps"
+   - Description: "Get a 6-week learning plan tailored to your skill gaps"
+   - Same styling as Card 1
+   - Hover: Border glows indigo
+   
+   Card 4: Progress Tracking
+   - Icon: Target icon (🎯) in green color, size 48px
+   - Title: "Progress Tracking"
+   - Description: "Track your learning progress week by week"
+   - Same styling as Card 1
+   - Hover: Border glows green
+
+3. BACKGROUND EFFECTS
+   - Animated gradient background
+   - Subtle particle effects (optional)
+   - Smooth scroll behavior
+
+
+================================================================================
+PAGE 2: UPLOAD PAGE (/upload)
+================================================================================
+
+PURPOSE:
+Allow users to upload their resume and view AI-extracted skills.
+
+LAYOUT:
+Centered card layout with upload zone and results section.
+
+DETAILED COMPONENTS:
+--------------------------------------------------------------------------------
+
+1. PAGE HEADER
+   Location: Top of page, full width
+   
+   Components:
+   - Progress Indicator
+     * Shows: "Step 1 of 3"
+     * Style: Small text (text-sm), gray-400
+     * Position: Top right
+   
+   - Main Title (H1)
+     * Text: "Step 1: Upload Your Resume"
+     * Style: text-4xl, font-bold, gradient (indigo-400 to purple-400)
+     * Position: Centered
+   
+   - Subtitle
+     * Text: "Let AI analyze your skills"
+     * Style: text-lg, gray-400
+     * Position: Below title, centered
+
+2. UPLOAD CARD
+   Location: Center of page, max-width 800px
+   
+   Components:
+   
+   a) Drag-and-Drop Zone (Before Upload)
+      - Container:
+        * Size: Full width, height 300px
+        * Background: Transparent with dashed border
+        * Border: 3px dashed indigo-500/50, rounded-xl
+        * Padding: 48px
+      
+      - Upload Icon
+        * Icon: Cloud upload icon
+        * Size: 64px
+        * Color: Indigo-400
+        * Position: Centered
+      
+      - Instructions Text
+        * Primary: "Drag and drop your resume here"
+          - Style: text-xl, white, font-semibold
+        * Secondary: "or click to browse"
+          - Style: text-sm, gray-400
+        * File types: "Supports PDF and DOCX"
+          - Style: text-xs, gray-500
+      
+      - Hover State:
+        * Border color changes to indigo-400
+        * Background: indigo-500/10
+        * Scale: 1.02
+      
+      - Active State (Dragging):
+        * Border color: cyan-400
+        * Background: cyan-500/20
+        * Glow effect
+   
+   b) Upload Button
+      - Text: "Choose File"
+      - Style: Button, indigo-600 background
+      - Size: Medium (px-6 py-3)
+      - Position: Below drag zone
+      - Click: Opens file picker
+   
+   c) File Info Display (After Selection)
+      - File name with icon
+      - File size
+      - "Remove" button (red, small)
+   
+   d) Upload Progress Bar (During Upload)
+      - Width: Full
+      - Height: 8px
+      - Background: gray-800
+      - Fill: Gradient (indigo-500 to purple-500)
+      - Animation: Smooth fill from 0% to 100%
+      - Text: "Uploading... 45%"
+
+3. EXTRACTED SKILLS SECTION
+   Location: Below upload card, appears after successful upload
+   
+   Animation: Fade-in and slide-up (500ms)
+   
+   Components:
+   
+   a) Section Header
+      - Title: "Extracted Skills"
+        * Style: text-2xl, font-bold, white
+      - Count Badge: "24 skills found"
+        * Style: Small badge, indigo-500/20 background, indigo-400 text
+   
+   b) Skills Categories (3 Tabs or Sections)
+      
+      TAB 1: TECHNICAL SKILLS
+      - Tab Button:
+        * Icon: Code icon (🔧)
+        * Text: "Technical Skills"
+        * Active: Indigo-500 border-bottom, white text
+        * Inactive: Gray-600 text
+      
+      - Skills Grid:
+        * Layout: Grid, 3 columns on desktop, 2 on tablet, 1 on mobile
+        * Gap: 16px between items
+      
+      - Each Skill Card:
+        * Background: Gray-800/50, glassmorphic
+        * Border: 1px solid gray-700, rounded-lg
+        * Padding: 16px
+        * Hover: Border glows blue, translateY -2px
+        
+        Components within card:
+        - Skill Name
+          * Style: text-lg, font-semibold, white
+          * Example: "JavaScript"
+        
+        - Proficiency Stars
+          * Display: 5 stars (filled/empty)
+          * Filled: Yellow-400
+          * Empty: Gray-600
+          * Example: ★★★★☆ (4/5)
+        
+        - Evidence Badge
+          * Icon: Info icon (i)
+          * Tooltip on hover: Shows quote from resume
+          * Example: "3 years of JavaScript development"
+          * Style: Small, gray-500 text
+        
+        - Category Badge
+          * Text: "Technical"
+          * Style: Small badge, blue-500/20 background
+          * Position: Top-right corner
+      
+      TAB 2: SOFT SKILLS
+      - Same structure as Technical Skills
+      - Color theme: Purple instead of blue
+      - Icon: Lightbulb (💡)
+      - Examples: "Leadership", "Communication", "Problem Solving"
+      
+      TAB 3: TOOLS & TECHNOLOGIES
+      - Same structure as Technical Skills
+      - Color theme: Green instead of blue
+      - Icon: Wrench (🛠️)
+      - Examples: "Git", "Docker", "VS Code"
+
+4. ACTION BUTTONS
+   Location: Bottom of page, centered
+   
+   Components:
+   - "Next: Analyze Gap" Button
+     * Style: Large button, gradient (indigo-600 to purple-600)
+     * Size: px-8 py-4, text-lg
+     * Icon: Arrow right (→)
+     * Enabled: After skills are extracted
+     * Disabled: Gray-600, cursor-not-allowed
+     * Click: Saves skills to localStorage, navigates to /analyze
+   
+   - "Upload Different Resume" Button
+     * Style: Secondary button, outline, gray-600
+     * Size: px-6 py-3, text-base
+     * Click: Clears current data, resets upload zone
+
+5. LOADING STATE
+   During AI extraction (5-10 seconds):
+   - Spinner: Circular, gradient border, rotating
+   - Text: "Analyzing your resume..."
+   - Subtext: "This may take a few seconds"
+   - Background: Semi-transparent overlay
+
+
+================================================================================
+PAGE 3: ANALYZE PAGE (/analyze)
+================================================================================
+
+PURPOSE:
+Input job description, analyze skill gaps, and display hiring readiness score.
+
+LAYOUT:
+Two-column layout on desktop, stacked on mobile.
+
+DETAILED COMPONENTS:
+--------------------------------------------------------------------------------
+
+1. PAGE HEADER
+   Same structure as Upload page
+   - Progress: "Step 2 of 3"
+   - Title: "Step 2: Analyze Skill Gap"
+   - Subtitle: "Compare your skills with your target role"
+
+2. LEFT COLUMN: INPUT SECTION
+   Width: 40% on desktop, full width on mobile
+   
+   Components:
+   
+   a) CURRENT SKILLS SUMMARY CARD
+      - Background: Glassmorphic (gray-900/50)
+      - Border: 2px indigo-500/30, rounded-xl
+      - Padding: 24px
+      
+      Components:
+      - Title: "Your Current Skills"
+        * Style: text-xl, font-semibold, white
+      
+      - Stats Grid (3 items):
+        * Technical: 12 skills (blue badge)
+        * Soft: 8 skills (purple badge)
+        * Tools: 4 skills (green badge)
+      
+      - "Edit Skills" Button
+        * Style: Small, outline, gray-600
+        * Click: Returns to /upload
+   
+   b) TARGET ROLE INPUT
+      - Label: "Target Role"
+        * Style: text-sm, font-medium, gray-300
+        * Icon: Target icon (🎯)
+      
+      - Input Field:
+        * Type: Text
+        * Placeholder: "e.g., Full Stack Developer, Data Scientist"
+        * Style: Full width, bg-gray-800, border gray-700
+        * Padding: 12px 16px, rounded-lg
+        * Focus: Border glows indigo-500
+        * Font: text-base, white
+   
+   c) JOB DESCRIPTION TEXTAREA
+      - Label: "Job Description"
+        * Style: text-sm, font-medium, gray-300
+        * Icon: Document icon (📋)
+      
+      - Textarea:
+        * Rows: 12
+        * Placeholder: "Paste the complete job description here..."
+        * Style: Full width, bg-gray-800, border gray-700
+        * Padding: 16px, rounded-lg
+        * Focus: Border glows indigo-500
+        * Font: text-sm, white, font-mono
+        * Resize: Vertical only
+      
+      - Character Counter:
+        * Position: Bottom-right of textarea
+        * Style: text-xs, gray-500
+        * Example: "1,234 characters"
+   
+   d) ANALYZE BUTTON
+      - Text: "Analyze Skill Gap"
+      - Style: Large button, full width, gradient (indigo-600 to purple-600)
+      - Size: py-4, text-lg, font-semibold
+      - Icon: Sparkles icon (✨)
+      - Disabled: If role or description is empty
+      - Loading State: Spinner + "Analyzing..."
+      - Click: Sends data to AI, shows results
+
+3. RIGHT COLUMN: RESULTS SECTION
+   Width: 60% on desktop, full width on mobile
+   Appears after analysis completes
+   
+   Components:
+   
+   a) HIRING READINESS SCORE CARD
+      - Background: Gradient (indigo-900/50 to purple-900/50)
+      - Border: 2px indigo-500/50, rounded-xl
+      - Padding: 32px
+      
+      Components:
+      - Title: "Hiring Readiness Score"
+        * Style: text-2xl, font-bold, white
+        * Icon: Trophy (🏆)
+      
+      - Circular Progress Indicator:
+        * Size: 200px diameter
+        * Position: Centered
+        * Background circle: Gray-800, stroke-width 12
+        * Progress circle: Gradient stroke (indigo-500 to purple-500)
+        * Animation: Fills from 0% to actual score over 2 seconds
+        
+        Inner Content:
+        - Score Number: "73%"
+          * Style: text-5xl, font-bold, white
+        - Status Text: "Ready"
+          * Style: text-lg, color based on score:
+            - 0-40%: Red-400 "Not Ready"
+            - 41-70%: Yellow-400 "Developing"
+            - 71-100%: Green-400 "Ready"
+      
+      - Score Interpretation:
+        * Text: Explains what the score means
+        * Style: text-sm, gray-400, centered
+        * Example: "You have 73% of the required skills for this role"
+   
+   b) SKILL GAPS TABLE
+      - Background: Gray-900/50, glassmorphic
+      - Border: 1px gray-700, rounded-xl
+      - Padding: 24px
+      
+      Components:
+      - Section Header:
+        * Title: "Skill Gaps to Address"
+        * Icon: Alert triangle (⚠️)
+        * Count: "8 gaps identified"
+      
+      - Table Structure:
+        * Headers: Skill | Current | Required | Gap | Priority
+        * Style: Sticky header, gray-800 background
+        * Font: text-sm, font-medium, gray-300
+      
+      - Table Rows (Each Gap):
+        * Background: Alternating (gray-800/30, transparent)
+        * Hover: bg-gray-800/50
+        * Padding: 12px
+        
+        Columns:
+        1. Skill Name
+           * Style: text-base, white, font-medium
+           * Example: "TypeScript"
+        
+        2. Current Level
+           * Display: Progress bar (0-5)
+           * Color: Blue-500
+           * Text: "2/5"
+        
+        3. Required Level
+           * Display: Progress bar (0-5)
+           * Color: Purple-500
+           * Text: "5/5"
+        
+        4. Gap Size
+           * Display: Number with arrow
+           * Example: "↑ 3 levels"
+           * Color based on gap:
+             - 0: Green-400 "✓ Met"
+             - 1-2: Yellow-400 "Moderate"
+             - 3+: Red-400 "Critical"
+        
+        5. Priority Badge
+           * Text: "High", "Medium", "Low"
+           * Color:
+             - High: Red-500/20 bg, red-400 text
+             - Medium: Yellow-500/20 bg, yellow-400 text
+             - Low: Gray-500/20 bg, gray-400 text
+      
+      - Sort Controls:
+        * Position: Top-right of table
+        * Options: "By Gap", "By Priority", "Alphabetical"
+        * Style: Small dropdown, gray-700
+   
+   c) STRENGTHS SECTION
+      - Background: Green-900/20, glassmorphic
+      - Border: 1px green-500/30, rounded-xl
+      - Padding: 24px
+      
+      Components:
+      - Title: "Your Strengths"
+        * Icon: Checkmark (✓)
+        * Style: text-xl, font-semibold, green-400
+      
+      - Strengths List:
+        * Layout: Grid, 2 columns
+        * Gap: 12px
+        
+        Each Strength Item:
+        - Checkmark icon (green-400)
+        - Skill name (white, text-base)
+        - Confidence: "95% match"
+          * Style: text-xs, green-400
+        
+        Example:
+        ✓ JavaScript (98% match)
+        ✓ React (95% match)
+        ✓ Problem Solving (90% match)
+
+4. ACTION BUTTONS
+   Location: Bottom of results section
+   
+   Components:
+   - "Generate Roadmap" Button
+     * Style: Large, gradient (indigo-600 to purple-600)
+     * Size: Full width, py-4, text-lg
+     * Icon: Map icon (🗺️)
+     * Glow effect on hover
+     * Click: Saves analysis, navigates to /roadmap
+   
+   - "Start Over" Button
+     * Style: Secondary, outline, gray-600
+     * Size: Full width, py-3, text-base
+     * Click: Clears data, returns to /upload
+
+5. LOADING STATE
+   During analysis (10-15 seconds):
+   - Full-screen overlay with blur
+   - Large spinner (gradient border)
+   - Progress steps:
+     * "Analyzing job requirements..." (0-33%)
+     * "Comparing with your skills..." (34-66%)
+     * "Calculating readiness score..." (67-100%)
+   - Animated progress bar
+
+
+================================================================================
+PAGE 4: ROADMAP PAGE (/roadmap)
+================================================================================
+
+PURPOSE:
+Display personalized 6-week learning roadmap with resources and projects.
+
+LAYOUT:
+Full-width layout with configuration card, progress overview, and week cards.
+
+DETAILED COMPONENTS:
+--------------------------------------------------------------------------------
+
+1. PAGE HEADER
+   - Progress: "Step 3 of 3"
+   - Title: "Your Learning Roadmap"
+   - Subtitle: "Personalized week-by-week plan to reach your goal"
+
+2. CONFIGURATION CARD (Before Generation)
+   Location: Center of page, max-width 600px
+   Display: Only shown before roadmap is generated
+   
+   Components:
+   
+   a) Card Container
+      - Background: Glassmorphic (gray-900/50)
+      - Border: 2px indigo-500/30, rounded-xl
+      - Padding: 32px
+   
+   b) Title Section
+      - Title: "Step 3: Generate Your Roadmap"
+        * Style: text-2xl, font-bold, white
+      - Description: "Tell us how much time you can dedicate per week"
+        * Style: text-base, gray-400
+   
+   c) Hours Per Week Input
+      - Label: "Available Hours Per Week"
+        * Icon: Clock (⏰)
+        * Style: text-sm, font-medium, gray-300
+      
+      - Number Input:
+        * Type: Number
+        * Default: 10
+        * Min: 5, Max: 40
+        * Style: Large input, bg-gray-800, border gray-700
+        * Size: text-3xl, centered, width 120px
+        * Focus: Border glows indigo-500
+      
+      - Slider (Alternative):
+        * Range: 5-40
+        * Step: 5
+        * Track: Gray-700
+        * Fill: Gradient (indigo-500 to purple-500)
+        * Thumb: Large circle, white, shadow
+        * Labels: "5h" (left), "40h" (right)
+      
+      - Time Estimate Display:
+        * Text: "Estimated completion: 6 weeks"
+        * Style: text-sm, gray-400
+        * Updates based on hours selected
+   
+   d) Generate Button
+      - Text: "Generate Personalized Roadmap"
+      - Style: Large button, full width, gradient
+      - Size: py-6, text-xl, font-bold
+      - Icon: Sparkles (✨)
+      - Loading State:
+        * Spinner + "Generating Your Roadmap..."
+        * Subtext: "This may take 30-40 seconds"
+      - Click: Sends request to AI, generates roadmap
+
+3. PROGRESS OVERVIEW CARD
+   Location: Top of page, full width
+   Display: After roadmap is generated
+   
+   Components:
+   
+   a) Card Container
+      - Background: Gradient (indigo-900/50 to purple-900/50)
+      - Border: 2px indigo-500/30, rounded-xl
+      - Padding: 32px
+   
+   b) Title
+      - Text: "Your Progress"
+      - Icon: Trophy (🏆)
+      - Style: text-2xl, font-bold, white
+   
+   c) Stats Grid
+      Layout: 3 columns, equal width
+      
+      Stat 1: Total Weeks
+      - Number: "6"
+        * Style: text-4xl, font-bold, indigo-400
+      - Label: "Total Weeks"
+        * Style: text-sm, gray-400
+      
+      Stat 2: Total Hours
+      - Number: "60h"
+        * Style: text-4xl, font-bold, purple-400
+      - Label: "Total Hours"
+        * Style: text-sm, gray-400
+      
+      Stat 3: Completed
+      - Number: "0/6"
+        * Style: text-4xl, font-bold, green-400
+        * Updates as user checks off weeks
+      - Label: "Completed"
+        * Style: text-sm, gray-400
+   
+   d) Progress Bar
+      - Container:
+        * Width: Full
+        * Height: 12px
+        * Background: Gray-800, rounded-full
+      
+      - Fill:
+        * Gradient: Indigo-500 to purple-500
+        * Width: Percentage based on completed weeks
+        * Animation: Smooth transition (500ms)
+        * Example: 0% → 17% → 33% → 50% → 67% → 83% → 100%
+
+4. WEEKLY TIMELINE SECTION
+   Location: Below progress card
+   Layout: Vertical stack of week cards
+   
+   Components:
+   
+   WEEK CARD (Repeated 6 times)
+   -------------------------
+   
+   a) Card Container
+      - Background: Gray-900/50, glassmorphic
+      - Border: 2px, color based on status:
+        * Not started: Gray-700
+        * In progress: Indigo-500/50
+        * Completed: Green-500/30
+      - Padding: 24px
+      - Margin: 16px bottom
+      - Rounded: xl
+      - Animation: Slide-in from left (staggered 100ms delay)
+   
+   b) Card Header
+      Layout: Horizontal flex, space-between
+      
+      Left Section:
+      - Completion Checkbox
+        * Unchecked: Circle outline, gray-600, size 24px
+        * Checked: Filled circle with checkmark, green-400
+        * Animation: Scale bounce on click
+        * Click: Toggles completion status
+      
+      - Week Badge
+        * Text: "Week 1", "Week 2", etc.
+        * Style: Small badge, indigo-500/20 bg, indigo-400 text
+        * Padding: 4px 12px, rounded-full
+      
+      - Week Title
+        * Text: "TypeScript Fundamentals"
+        * Style: text-2xl, font-bold, white
+        * Completed: Line-through, gray-500
+      
+      Right Section:
+      - Estimated Hours
+        * Icon: Clock (⏰)
+        * Text: "10 hours"
+        * Style: text-sm, gray-400
+      
+      - Primary Skill
+        * Text: "Skills: TypeScript"
+        * Style: text-sm, gray-400
+   
+   c) Card Body (Expandable Sections)
+      
+      SECTION 1: LEARNING RESOURCES
+      - Header:
+        * Icon: Books (📚)
+        * Title: "Learning Resources"
+        * Style: text-lg, font-semibold, white
+      
+      - Resources List:
+        Layout: Vertical stack, gap 12px
+        
+        Each Resource Item:
+        - Container:
+          * Background: Gray-800/50
+          * Border: 1px gray-700, rounded-lg
+          * Padding: 16px
+          * Hover: Border glows indigo-500, translateY -2px
+          * Click: Opens link in new tab
+        
+        - Layout: Horizontal flex, space-between
+        
+        Left Section:
+        - Resource Icon
+          * Video: 🎥 (red-400)
+          * Documentation: 📚 (blue-400)
+          * Article: 📝 (purple-400)
+          * Course: 🎓 (green-400)
+          * Size: 32px
+        
+        - Resource Info:
+          * Title: "TypeScript Handbook"
+            - Style: text-base, font-medium, white
+          * Meta: "documentation • 3h"
+            - Style: text-xs, gray-500
+        
+        Right Section:
+        - External Link Icon
+          * Icon: Arrow-up-right
+          * Color: Gray-500
+          * Size: 16px
+        
+        Example Resources:
+        1. 🎥 TypeScript Crash Course (video • 2h)
+        2. 📚 Official TypeScript Docs (documentation • 3h)
+        3. 📝 Advanced Types Guide (article • 1h)
+        4. 🎓 TypeScript Masterclass (course • 4h)
+      
+      SEPARATOR
+      - Line: 1px, gray-700, full width
+      
+      SECTION 2: PRACTICE PROJECT
+      - Header:
+        * Icon: Tools (🛠️)
+        * Title: "Practice Project"
+        * Style: text-lg, font-semibold, white
+      
+      - Project Card:
+        * Background: Purple-500/10
+        * Border: 1px purple-500/30, rounded-lg
+        * Padding: 20px
+        
+        Content:
+        - Project Title: "Build a Type-Safe REST API"
+          * Style: text-base, font-semibold, purple-300
+        
+        - Project Description:
+          * Text: "Create a RESTful API using TypeScript with proper type definitions, interfaces, and error handling"
+          * Style: text-sm, gray-300
+          * Line height: 1.6
+        
+        - Difficulty Badge:
+          * Text: "Intermediate"
+          * Style: Small badge, purple-500/20 bg
+      
+      SEPARATOR
+      - Line: 1px, gray-700, full width
+      
+      SECTION 3: MILESTONES
+      - Header:
+        * Icon: Target (🎯)
+        * Title: "Milestones"
+        * Style: text-lg, font-semibold, white
+      
+      - Milestones List:
+        Layout: Vertical stack, gap 8px
+        
+        Each Milestone:
+        - Container: Horizontal flex, gap 12px
+        
+        - Checkmark Icon
+          * Icon: Check (✓)
+          * Color: Green-400
+          * Size: 16px
+        
+        - Milestone Text
+          * Example: "Understand TypeScript type system"
+          * Style: text-sm, gray-400
+        
+        Example Milestones:
+        ✓ Understand TypeScript type system
+        ✓ Create interfaces and type aliases
+        ✓ Implement generic functions
+        ✓ Build a typed project from scratch
+
+5. ACTION BUTTONS
+   Location: Bottom of page, centered
+   
+   Components:
+   - "Generate New Roadmap" Button
+     * Style: Medium button, outline, indigo-600
+     * Size: px-6 py-3, text-base
+     * Icon: Refresh
+     * Click: Returns to configuration, clears current roadmap
+   
+   - "Start Over with New Resume" Button
+     * Style: Secondary button, outline, gray-600
+     * Size: px-6 py-3, text-base
+     * Click: Clears all data, returns to /upload
+
+6. EMPTY STATE (No Roadmap Generated Yet)
+   - Large icon: Map (🗺️), size 80px, gray-600
+   - Title: "No Roadmap Yet"
+   - Description: "Configure your learning preferences and generate your roadmap"
+   - CTA: Points to configuration card above
+
+7. LOADING STATE
+   During generation (30-40 seconds):
+   - Overlay: Semi-transparent, blur background
+   - Spinner: Large, gradient border, rotating
+   - Progress Text:
+     * "Analyzing skill gaps..." (0-20%)
+     * "Prioritizing learning path..." (21-40%)
+     * "Generating week structure..." (41-60%)
+     * "Fetching learning resources..." (61-100%)
+   - Progress Bar: Animated, gradient fill
+   - Tip: "Did you know? Our AI curates resources from 100+ platforms"
+
+
+================================================================================
+PAGE 5: UI SHOWCASE PAGE (/ui-showcase)
+================================================================================
+
+PURPOSE:
+Demonstrate all premium UI components and design system.
+
+LAYOUT:
+Tabbed interface with 5 sections.
+
+DETAILED COMPONENTS:
+--------------------------------------------------------------------------------
+
+1. PAGE HEADER
+   - Title: "UI Component Showcase"
+   - Subtitle: "Premium SaaS Design System"
+
+2. TABS NAVIGATION
+   Location: Below header, horizontal tabs
+   
+   Tab Structure:
+   - Container: Horizontal flex, gap 8px
+   - Background: Gray-900/50, rounded-lg
+   - Padding: 8px
+   
+   Each Tab Button:
+   - Icon + Text
+   - Inactive: Gray-600 text, transparent bg
+   - Active: White text, indigo-500 bg, rounded-md
+   - Hover: Gray-700 bg
+   - Transition: 200ms
+   
+   Tabs:
+   1. 🎨 Glassmorphic Sidebar
+   2. 💬 Socratic Tutor
+   3. 🌙 Dark Mode & Neon
+   4. 🔥 Skill Heatmap
+   5. 🗺️ Animated Roadmap
+
+3. TAB 1: GLASSMORPHIC SIDEBAR
+   
+   Components:
+   
+   a) Demo Sidebar
+      - Width: 280px
+      - Height: 600px
+      - Background: Glassmorphic (gray-900/80, backdrop-blur-xl)
+      - Border: 1px indigo-500/30, rounded-xl
+      - Padding: 24px
+      
+      Sections:
+      
+      USER PROFILE SECTION
+      - Avatar:
+        * Size: 64px circle
+        * Border: 2px gradient (indigo-400 to purple-400)
+        * Image: User photo or initials
+      
+      - User Info:
+        * Name: "John Doe"
+          - Style: text-lg, font-semibold, white
+        * Email: "john@example.com"
+          - Style: text-sm, gray-400
+      
+      - Market-Ready Score:
+        * Container: Glassmorphic card, padding 12px
+        * Label: "Market-Ready Score"
+          - Style: text-xs, gray-400
+        * Score: "73%"
+          - Style: text-2xl, font-bold, gradient text
+        * Progress Bar: Animated, gradient fill
+      
+      NAVIGATION SECTION
+      - Nav Items (5 items):
+        Each item:
+        - Icon (24px) + Text
+        - Padding: 12px
+        - Rounded: md
+        - Hover: bg-gray-800/50
+        - Active: bg-indigo-500/20, indigo-400 text
+        
+        Items:
+        1. 🏠 Dashboard
+        2. 📄 Resume
+        3. 📊 Analysis
+        4. 🗺️ Roadmap
+        5. ⚙️ Settings
+      
+      SKILL STATS SECTION
+      - Title: "Skill Progress"
+      - Stats (3 items):
+        Each stat:
+        - Label + Progress bar
+        - Example:
+          * "Technical: 12/15"
+          * Progress: 80% filled, blue gradient
+   
+   b) Description Panel
+      - Explains glassmorphism technique
+      - Shows CSS properties used
+      - Lists benefits
+
+4. TAB 2: SOCRATIC TUTOR
+   
+   Components:
+   
+   a) Chat Interface
+      - Container: 600px width, 500px height
+      - Background: Gray-900/50, rounded-xl
+      - Border: 1px gray-700
+      
+      MESSAGES AREA
+      - Scrollable container
+      - Padding: 24px
+      - Gap: 16px between messages
+      
+      User Message Bubble:
+      - Alignment: Right
+      - Background: Indigo-600, rounded-2xl
+      - Padding: 12px 16px
+      - Max width: 70%
+      - Text: White, text-sm
+      - Tail: Small triangle pointing right
+      
+      AI Message Bubble:
+      - Alignment: Left
+      - Background: Gray-800, rounded-2xl
+      - Padding: 12px 16px
+      - Max width: 70%
+      - Text: Gray-200, text-sm
+      - Tail: Small triangle pointing left
+      - Avatar: AI icon (24px) on left
+      
+      Typing Indicator:
+      - Three dots animation
+      - Gray-600 color
+      - Bouncing animation
+      
+      INPUT AREA
+      - Position: Bottom of container
+      - Background: Gray-800
+      - Border-top: 1px gray-700
+      - Padding: 16px
+      
+      Components:
+      - Text Input:
+        * Placeholder: "Ask me anything..."
+        * Style: Full width, bg-gray-900, border gray-700
+        * Padding: 12px 16px, rounded-lg
+      
+      - Send Button:
+        * Icon: Paper plane
+        * Style: Indigo-600 bg, rounded-lg
+        * Size: 40px square
+        * Hover: Indigo-500, scale 1.05
+
+5. TAB 3: DARK MODE & NEON
+   
+   Components:
+   
+   a) Color Palette Display
+      - Grid: 4 columns
+      - Gap: 16px
+      
+      Each Color Swatch:
+      - Container: 120px square
+      - Background: The color itself
+      - Border: 1px lighter shade, rounded-lg
+      - Padding: 16px
+      
+      Info:
+      - Color Name: "Indigo 500"
+      - Hex Code: "#6366f1"
+      - Usage: "Primary actions"
+      
+      Colors Shown:
+      1. Indigo-400, 500, 600
+      2. Purple-400, 500, 600
+      3. Cyan-400, 500
+      4. Green-400, 500
+      5. Red-400, 500
+      6. Yellow-400, 500
+   
+   b) Gradient Examples
+      - 3 gradient cards
+      - Each: 300px width, 150px height
+      - Rounded-xl
+      
+      Gradients:
+      1. Indigo to Purple (Primary)
+      2. Cyan to Blue (Accent)
+      3. Purple to Pink (Special)
+   
+   c) Neon Glow Effects
+      - Demo buttons with different glow colors
+      - Hover to see glow intensify
+      - Shows CSS for glow effect
+
+6. TAB 4: SKILL HEATMAP
+   
+   Components:
+   
+   a) Canvas Heatmap
+      - Size: 800px x 600px
+      - Background: Transparent
+      
+      Skills Grid:
+      - Layout: Grid of skill cells
+      - Each cell: 80px x 60px
+      
+      Cell Components:
+      - Skill Name: Centered, text-sm, white
+      - Background Color: Based on proficiency
+        * Indigo: Proficient (80-100%)
+        * Cyan: Developing (50-79%)
+        * Purple: Learning (20-49%)
+        * Pink: Critical Gap (0-19%)
+      
+      - Border: 1px darker shade
+      - Glow: Neon glow for critical gaps
+      
+      Hover State:
+      - Scale: 1.1
+      - Z-index: 10
+      - Tooltip appears:
+        * Background: Black/90, rounded-lg
+        * Padding: 12px
+        * Content:
+          - Skill: "TypeScript"
+          - Current: "2/5"
+          - Target: "5/5"
+          - Gap: "3 levels"
+        * Arrow pointing to cell
+   
+   b) Legend
+      - Position: Bottom of heatmap
+      - Layout: Horizontal, 4 items
+      
+      Each Legend Item:
+      - Color square (20px)
+      - Label text
+      - Example: [Indigo] Proficient (80-100%)
+
+7. TAB 5: ANIMATED ROADMAP
+   
+   Components:
+   
+   a) Mini Roadmap Demo
+      - Shows 3 week cards (condensed version)
+      - Demonstrates animations:
+        * Slide-in from left (staggered)
+        * Expand/collapse on click
+        * Completion animation
+      
+      Week Card (Condensed):
+      - Same structure as full roadmap
+      - Smaller size (max-width 600px)
+      - Fewer resources (2-3 instead of 4-5)
+      
+      Animations Demonstrated:
+      1. Initial Load: Slide-in (100ms stagger)
+      2. Hover: Lift effect (translateY -4px)
+      3. Click: Expand/collapse (300ms)
+      4. Complete: Checkmark animation + fade
+   
+   b) Animation Controls
+      - Buttons to trigger animations:
+        * "Replay Slide-In"
+        * "Toggle Week 2"
+        * "Mark Week 1 Complete"
+      
+      - Speed Control: Slider (0.5x to 2x)
+
+
+================================================================================
+COMPLETE USER JOURNEY FLOWCHART
+================================================================================
+
+START
+  |
+  v
+HOME PAGE (/)
+  - View features
+  - Click "Get Started"
+  |
+  v
+UPLOAD PAGE (/upload)
+  - Upload resume (PDF/DOCX)
+  - AI extracts skills (5-10 sec)
+  - Review extracted skills
+  - Click "Next: Analyze Gap"
+  |
+  v
+ANALYZE PAGE (/analyze)
+  - Enter target role
+  - Paste job description
+  - Click "Analyze Gap"
+  - AI analyzes (10-15 sec)
+  - View readiness score
+  - Review skill gaps
+  - Click "Generate Roadmap"
+  |
+  v
+ROADMAP PAGE (/roadmap)
+  - Set hours per week
+  - Click "Generate Roadmap"
+  - AI generates plan (30-40 sec)
+  - View 6-week roadmap
+  - Review resources
+  - Track progress
+  |
+  v
+END (User follows roadmap)
+
+TOTAL TIME: 2-3 minutes from start to roadmap
+
+
+================================================================================
+TECHNICAL IMPLEMENTATION NOTES
+================================================================================
+
+FRONTEND STACK:
+- Framework: Next.js 14 (App Router)
+- Language: TypeScript
+- Styling: TailwindCSS
+- UI Components: Shadcn/ui
+- Animations: Framer Motion
+- Icons: Lucide React
+
+BACKEND STACK:
+- Runtime: Node.js
+- Framework: Express
+- Database: MongoDB
+- AI: OpenRouter API (GPT-3.5 Turbo)
+- File Processing: pdf-parse, mammoth
+
+API ENDPOINTS:
+1. POST /api/resume/upload - Upload and extract skills
+2. POST /api/analyze/gap - Analyze skill gaps
+3. POST /api/roadmap/generate - Generate 6-week roadmap
+
+DATA FLOW:
+1. Resume → Text Extraction → AI Analysis → Skills JSON
+2. Skills + Job Description → AI Analysis → Gaps + Score
+3. Gaps + Hours → AI Generation → 6-Week Roadmap
+
+PERFORMANCE:
+- Resume analysis: ~5-10 seconds
+- Gap analysis: ~10-15 seconds
+- Roadmap generation: ~30-40 seconds
+- Total: ~1-2 minutes for complete flow
+
+RESPONSIVE BREAKPOINTS:
+- Mobile: < 640px (1 column, stacked)
+- Tablet: 640px - 1024px (2 columns)
+- Desktop: > 1024px (full layout)
+
+
+================================================================================
+KEY SELLING POINTS FOR STAKEHOLDERS
+================================================================================
+
+1. AI-POWERED INTELLIGENCE
+   - Uses GPT-3.5 Turbo for accurate skill extraction
+   - Intelligent gap analysis with readiness scoring
+   - Personalized roadmap generation
+
+2. PREMIUM USER EXPERIENCE
+   - Modern dark mode with glassmorphism
+   - Smooth animations and micro-interactions
+   - Professional, polished interface
+
+3. ACTIONABLE INSIGHTS
+   - Concrete learning resources (not just suggestions)
+   - Week-by-week structured plan
+   - Measurable milestones
+
+4. TIME-EFFICIENT
+   - Complete analysis in under 2 minutes
+   - 6-week focused roadmaps (not overwhelming)
+   - Curated resources save research time
+
+5. PROGRESS TRACKING
+   - Visual progress indicators
+   - Completion checkboxes
+   - Motivating score displays
+
+6. SCALABLE ARCHITECTURE
+   - Modern tech stack (Next.js, TypeScript)
+   - API-first design
+   - Easy to extend with new features
+
+
+================================================================================
+FUTURE ENHANCEMENT OPPORTUNITIES
+================================================================================
+
+1. USER ACCOUNTS
+   - Save multiple roadmaps
+   - Track progress over time
+   - Sync across devices
+
+2. SOCIAL FEATURES
+   - Share roadmaps with friends
+   - Community learning groups
+   - Mentor matching
+
+3. ADVANCED AI
+   - Socratic tutor for Q&A
+   - Skill assessments/quizzes
+   - Adaptive learning paths
+
+4. INTEGRATIONS
+   - LinkedIn profile import
+   - Calendar integration for scheduling
+   - Learning platform connections
+
+5. MOBILE APP
+   - React Native version
+   - Push notifications for milestones
+   - Offline access to roadmaps
+
+6. ANALYTICS
+   - Learning time tracking
+   - Completion rates
+   - Skill improvement metrics
+
+
+================================================================================
+END OF PROTOTYPE CONTEXT DOCUMENT
+================================================================================
+
+For questions or clarifications, contact the development team.
+Last updated: December 29, 2024
