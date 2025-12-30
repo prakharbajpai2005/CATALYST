@@ -1,10 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Upload, FileText, Loader2, CheckCircle2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import DashboardSidebar from '@/components/Layout/DashboardSidebar';
+import MetricCard from '@/components/ui/metric-card';
+import DotMatrix from '@/components/ui/dot-matrix';
+import MiniTrendChart from '@/components/ui/mini-trend-chart';
 
 interface Skill {
   name: string;
@@ -24,24 +28,23 @@ export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [skills, setSkills] = useState<SkillCategories | null>(null);
-  const [error, setError] = useState<string>('');
-  const [dragActive, setDragActive] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === 'dragenter' || e.type === 'dragover') {
-      setDragActive(true);
+      setIsDragging(true);
     } else if (e.type === 'dragleave') {
-      setDragActive(false);
+      setIsDragging(false);
     }
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setDragActive(false);
-
+    setIsDragging(false);
+    
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFile(e.dataTransfer.files[0]);
     }
@@ -54,21 +57,18 @@ export default function UploadPage() {
   };
 
   const handleFile = (selectedFile: File) => {
-    const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    if (!allowedTypes.includes(selectedFile.type)) {
-      setError('Please upload a PDF or DOCX file');
-      return;
+    if (selectedFile.type === 'application/pdf' || 
+        selectedFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      setFile(selectedFile);
+    } else {
+      alert('Please upload a PDF or DOCX file');
     }
-    setFile(selectedFile);
-    setError('');
   };
 
   const handleUpload = async () => {
     if (!file) return;
 
     setUploading(true);
-    setError('');
-
     const formData = new FormData();
     formData.append('resume', file);
 
@@ -80,101 +80,86 @@ export default function UploadPage() {
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Upload failed');
+      if (response.ok) {
+        setSkills(data.skills);
+        localStorage.setItem('extracted_skills', JSON.stringify(data.skills));
+      } else {
+        alert(data.error || 'Failed to upload resume');
       }
-
-      setSkills(data.skills);
-      
-      // Store skills in localStorage for next steps
-      localStorage.setItem('extracted_skills', JSON.stringify(data.skills));
-      localStorage.setItem('total_skills', data.totalSkills.toString());
-
-    } catch (err: any) {
-      setError(err.message || 'Failed to upload resume');
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Failed to upload resume');
     } finally {
       setUploading(false);
     }
   };
 
-  const getProficiencyLabel = (level: number) => {
-    const labels = ['Beginner', 'Basic', 'Intermediate', 'Advanced', 'Expert'];
-    return labels[level - 1] || 'Unknown';
-  };
-
-  const getProficiencyColor = (level: number) => {
-    if (level >= 4) return 'text-green-400';
-    if (level >= 3) return 'text-yellow-400';
-    return 'text-orange-400';
-  };
+  const totalSkills = skills ? 
+    skills.technical.length + skills.soft.length + skills.tools.length : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-indigo-950 to-gray-950 p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-black">
+      <DashboardSidebar />
+      
+      <div className="ml-20 p-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent mb-2">
-            Upload Your Resume
-          </h1>
-          <p className="text-gray-400">Let AI analyze your skills and experience</p>
+        <div className="mb-8">
+          <div className="text-sm text-gray-400 mb-2">STEP 1 OF 3</div>
+          <h1 className="text-4xl font-bold text-white mb-2">Upload Your Resume</h1>
+          <p className="text-gray-400">Let AI analyze your skills</p>
         </div>
 
-        {/* Upload Card */}
-        {!skills && (
-          <Card className="bg-gray-900/50 border-2 border-indigo-500/30">
-            <CardHeader>
-              <CardTitle>Step 1: Upload Resume</CardTitle>
-              <CardDescription>PDF or DOCX format, max 5MB</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {/* Drag and Drop Zone */}
+        {/* Upload Section */}
+        {!skills ? (
+          <div className="max-w-2xl">
+            <Card className="dashboard-card p-8">
               <div
                 className={`
-                  border-2 border-dashed rounded-lg p-12 text-center transition-all
-                  ${dragActive ? 'border-indigo-500 bg-indigo-500/10' : 'border-gray-700 hover:border-indigo-500/50'}
+                  border-2 border-dashed rounded-2xl p-12 text-center transition-all
+                  ${isDragging 
+                    ? 'border-[#7FFF00] bg-[#7FFF00]/10' 
+                    : 'border-[#2a2a2a] hover:border-[#3a3a3a]'
+                  }
                 `}
                 onDragEnter={handleDrag}
                 onDragLeave={handleDrag}
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
               >
-                <Upload className="w-16 h-16 mx-auto mb-4 text-indigo-400" />
-                <p className="text-lg font-semibold mb-2">
+                <Upload className="w-16 h-16 mx-auto mb-4 text-gray-600" />
+                <h3 className="text-xl font-semibold text-white mb-2">
                   {file ? file.name : 'Drag and drop your resume here'}
+                </h3>
+                <p className="text-gray-400 mb-4">
+                  {file ? `${(file.size / 1024).toFixed(2)} KB` : 'or click to browse'}
                 </p>
-                <p className="text-sm text-gray-400 mb-4">or</p>
-                <label className="cursor-pointer">
-                  <span className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg inline-block">
-                    Browse Files
-                  </span>
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept=".pdf,.docx"
-                    onChange={handleFileInput}
-                  />
+                <p className="text-xs text-gray-500 mb-6">Supports PDF and DOCX</p>
+                
+                <input
+                  type="file"
+                  id="file-upload"
+                  className="hidden"
+                  accept=".pdf,.docx"
+                  onChange={handleFileInput}
+                />
+                
+                <label htmlFor="file-upload">
+                  <Button
+                    className="pill-button bg-white text-black hover:bg-gray-200"
+                    onClick={() => document.getElementById('file-upload')?.click()}
+                  >
+                    <FileText className="w-4 h-4 mr-2" />
+                    Choose File
+                  </Button>
                 </label>
               </div>
 
-              {error && (
-                <div className="mt-4 p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-400 text-sm">
-                  {error}
-                </div>
-              )}
-
-              {file && !error && (
-                <div className="mt-4 flex items-center justify-between p-4 bg-indigo-500/10 border border-indigo-500/30 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <FileText className="w-5 h-5 text-indigo-400" />
-                    <div>
-                      <p className="font-semibold">{file.name}</p>
-                      <p className="text-sm text-gray-400">{(file.size / 1024).toFixed(2)} KB</p>
-                    </div>
-                  </div>
+              {file && (
+                <div className="mt-6 flex justify-end">
                   <Button
+                    className="pill-button bg-[#7FFF00] text-black hover:bg-[#6FEF00]"
                     onClick={handleUpload}
                     disabled={uploading}
-                    className="bg-indigo-600 hover:bg-indigo-700"
                   >
                     {uploading ? (
                       <>
@@ -184,104 +169,142 @@ export default function UploadPage() {
                     ) : (
                       <>
                         <Upload className="w-4 h-4 mr-2" />
-                        Analyze Resume
+                        Upload & Analyze
                       </>
                     )}
                   </Button>
                 </div>
               )}
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Skills Display */}
-        {skills && (
-          <div className="space-y-6">
-            <Card className="bg-gray-900/50 border-2 border-green-500/30">
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-6 h-6 text-green-400" />
-                  <CardTitle>Skills Extracted Successfully!</CardTitle>
-                </div>
-                <CardDescription>
-                  Found {skills.technical.length + skills.soft.length + skills.tools.length} skills across 3 categories
-                </CardDescription>
-              </CardHeader>
             </Card>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {/* Rich Metrics Dashboard */}
 
-            {/* Technical Skills */}
-            {skills.technical.length > 0 && (
-              <Card className="bg-gray-900/50 border-2 border-blue-500/30">
-                <CardHeader>
-                  <CardTitle className="text-blue-400">💻 Technical Skills ({skills.technical.length})</CardTitle>
-                </CardHeader>
-                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {skills.technical.map((skill, idx) => (
-                    <div key={idx} className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-semibold">{skill.name}</span>
-                        <span className={`text-sm ${getProficiencyColor(skill.proficiency)}`}>
-                          {getProficiencyLabel(skill.proficiency)}
-                        </span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl">
+              {/* Total Skills Trend */}
+              <div className="dashboard-card p-6">
+                <MiniTrendChart 
+                  data={[12, 15, 18, 20, 22, totalSkills]} 
+                  label="Total Skills Extracted"
+                  value={totalSkills.toString()}
+                  trend="+2 new"
+                  color="white"
+                  height={80}
+                />
+              </div>
+
+              {/* Technical Skills Density */}
+              <div className="dashboard-card p-6">
+                <DotMatrix 
+                  rows={4} 
+                  cols={8} 
+                  activeCount={skills.technical.length * 2}
+                  label="Technical Proficiency"
+                  value={skills.technical.length.toString()}
+                  color="green"
+                />
+              </div>
+
+              {/* Soft Skills Density */}
+              <div className="dashboard-card p-6">
+                <DotMatrix 
+                  rows={4} 
+                  cols={8} 
+                  activeCount={skills.soft.length * 2}
+                  label="Soft Skills Balance"
+                  value={skills.soft.length.toString()}
+                  color="orange"
+                />
+              </div>
+            </div>
+
+
+            {/* Skills Grid */}
+            <div className="max-w-6xl space-y-6">
+              {/* Technical Skills */}
+              {skills.technical.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-4">Technical Skills</h3>
+                  <div className="grid grid-cols-3 gap-4">
+                    {skills.technical.map((skill, idx) => (
+                      <div key={idx} className="dashboard-card p-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <span className="font-semibold text-white">{skill.name}</span>
+                          <span className="text-xs px-2 py-1 rounded-full bg-[#7FFF00]/20 text-[#7FFF00]">
+                            {skill.proficiency}/5
+                          </span>
+                        </div>
+                        <div className="text-xs text-gray-400 line-clamp-2">
+                          {skill.evidence}
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-400 italic">"{skill.evidence}"</p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            )}
+                    ))}
+                  </div>
+                </div>
+              )}
 
-            {/* Tools */}
-            {skills.tools.length > 0 && (
-              <Card className="bg-gray-900/50 border-2 border-purple-500/30">
-                <CardHeader>
-                  <CardTitle className="text-purple-400">🛠️ Tools & Technologies ({skills.tools.length})</CardTitle>
-                </CardHeader>
-                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {skills.tools.map((skill, idx) => (
-                    <div key={idx} className="p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-semibold">{skill.name}</span>
-                        <span className={`text-sm ${getProficiencyColor(skill.proficiency)}`}>
-                          {getProficiencyLabel(skill.proficiency)}
-                        </span>
+              {/* Soft Skills */}
+              {skills.soft.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-4">Soft Skills</h3>
+                  <div className="grid grid-cols-3 gap-4">
+                    {skills.soft.map((skill, idx) => (
+                      <div key={idx} className="dashboard-card p-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <span className="font-semibold text-white">{skill.name}</span>
+                          <span className="text-xs px-2 py-1 rounded-full bg-[#FF8C00]/20 text-[#FF8C00]">
+                            {skill.proficiency}/5
+                          </span>
+                        </div>
+                        <div className="text-xs text-gray-400 line-clamp-2">
+                          {skill.evidence}
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-400 italic">"{skill.evidence}"</p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            )}
+                    ))}
+                  </div>
+                </div>
+              )}
 
-            {/* Soft Skills */}
-            {skills.soft.length > 0 && (
-              <Card className="bg-gray-900/50 border-2 border-green-500/30">
-                <CardHeader>
-                  <CardTitle className="text-green-400">🤝 Soft Skills ({skills.soft.length})</CardTitle>
-                </CardHeader>
-                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {skills.soft.map((skill, idx) => (
-                    <div key={idx} className="p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-semibold">{skill.name}</span>
-                        <span className={`text-sm ${getProficiencyColor(skill.proficiency)}`}>
-                          {getProficiencyLabel(skill.proficiency)}
-                        </span>
+              {/* Tools */}
+              {skills.tools.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-4">Tools & Technologies</h3>
+                  <div className="grid grid-cols-3 gap-4">
+                    {skills.tools.map((skill, idx) => (
+                      <div key={idx} className="dashboard-card p-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <span className="font-semibold text-white">{skill.name}</span>
+                          <span className="text-xs px-2 py-1 rounded-full bg-white/20 text-white">
+                            {skill.proficiency}/5
+                          </span>
+                        </div>
+                        <div className="text-xs text-gray-400 line-clamp-2">
+                          {skill.evidence}
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-400 italic">"{skill.evidence}"</p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            )}
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
-            {/* Next Step Button */}
-            <div className="flex justify-center">
+            {/* Actions */}
+            <div className="flex gap-4 max-w-4xl">
               <Button
-                onClick={() => router.push('/analyze')}
-                className="bg-indigo-600 hover:bg-indigo-700 px-8 py-6 text-lg"
+                className="pill-button bg-white text-black hover:bg-gray-200"
+                onClick={() => {
+                  setFile(null);
+                  setSkills(null);
+                }}
               >
-                Next: Analyze Skill Gap →
+                Upload Different Resume
+              </Button>
+              <Button
+                className="pill-button bg-[#7FFF00] text-black hover:bg-[#6FEF00]"
+                onClick={() => router.push('/analyze')}
+              >
+                Next: Analyze Gap →
               </Button>
             </div>
           </div>

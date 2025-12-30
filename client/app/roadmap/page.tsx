@@ -1,13 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Loader2, Calendar, Clock, ExternalLink, CheckCircle2, Circle, Trophy } from 'lucide-react';
+import { Loader2, ExternalLink, CheckCircle2, Circle, ChevronDown, ChevronUp } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import DashboardSidebar from '@/components/Layout/DashboardSidebar';
+import MetricCard from '@/components/ui/metric-card';
+import TimelineBar from '@/components/ui/timeline-bar';
+import DotMatrix from '@/components/ui/dot-matrix';
+import MiniTrendChart from '@/components/ui/mini-trend-chart';
 
 interface Resource {
   title: string;
@@ -19,15 +22,14 @@ interface Resource {
 interface WeekPlan {
   week: number;
   title: string;
-  skill?: string; // Backend returns singular skill
-  skills?: string[]; // Legacy support for array
+  skill?: string;
+  skills?: string[];
   topics?: string[];
   estimatedHours: number;
   resources: Resource[];
   practiceProject: string;
   milestones: string[];
   completed?: boolean;
-  isPlaceholder?: boolean; // For progressive loading
 }
 
 interface Roadmap {
@@ -39,11 +41,11 @@ interface Roadmap {
 
 export default function RoadmapPage() {
   const router = useRouter();
+  const [hoursPerWeek, setHoursPerWeek] = useState(10);
   const [loading, setLoading] = useState(false);
   const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
-  const [hoursPerWeek, setHoursPerWeek] = useState(10);
   const [error, setError] = useState('');
-  const [loadingMessage, setLoadingMessage] = useState('Initializing...');
+  const [expandedWeek, setExpandedWeek] = useState<number | null>(null);
 
   const handleGenerate = async () => {
     const gapAnalysis = localStorage.getItem('gap_analysis');
@@ -95,241 +97,227 @@ export default function RoadmapPage() {
     localStorage.setItem('roadmap', JSON.stringify(updated));
   };
 
-  const getResourceIcon = (type: string) => {
-    switch (type) {
-      case 'video': return '🎥';
-      case 'documentation': return '📚';
-      case 'article': return '📝';
-      case 'course': return '🎓';
-      default: return '🔗';
-    }
-  };
-
   const completedWeeks = roadmap?.weeklyPlan.filter(w => w.completed).length || 0;
   const progressPercentage = roadmap ? (completedWeeks / roadmap.totalWeeks) * 100 : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-indigo-950 to-gray-950 p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-black">
+      <DashboardSidebar />
+      
+      <div className="ml-20 p-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent mb-2">
-            Your Learning Roadmap
-          </h1>
-          <p className="text-gray-400">Personalized week-by-week plan to reach your goal</p>
+        <div className="mb-8">
+          <div className="text-sm text-gray-400 mb-2">STEP 3 OF 3</div>
+          <h1 className="text-4xl font-bold text-white mb-2">Learning Roadmap</h1>
+          <p className="text-gray-400">Your personalized week-by-week plan</p>
         </div>
 
-        {/* Configuration */}
-        {!roadmap && (
-          <Card className="bg-gray-900/50 border-2 border-indigo-500/30 mb-8">
-            <CardHeader>
-              <CardTitle>Step 3: Generate Your Roadmap</CardTitle>
-              <CardDescription>Tell us how much time you can dedicate per week</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+        {!roadmap ? (
+          <div className="max-w-2xl">
+            <Card className="dashboard-card p-8 space-y-6">
               <div>
-                <label className="block text-sm font-semibold mb-2">Available Hours Per Week</label>
-                <Input
-                  type="number"
-                  value={hoursPerWeek}
-                  onChange={(e) => setHoursPerWeek(parseInt(e.target.value) || 10)}
-                  min={1}
-                  max={40}
-                  className="bg-gray-800 border-indigo-500/30"
-                />
-                <p className="text-xs text-gray-500 mt-1">Recommended: 10-15 hours for steady progress</p>
+                <label className="text-sm text-gray-400 mb-4 block">
+                  Available Hours Per Week
+                </label>
+                <div className="flex items-center gap-4">
+                  <Input
+                    type="number"
+                    min="5"
+                    max="40"
+                    value={hoursPerWeek}
+                    onChange={(e) => setHoursPerWeek(Number(e.target.value))}
+                    className="bg-black border-[#2a2a2a] text-white text-3xl text-center w-32"
+                  />
+                  <span className="text-gray-400">hours/week</span>
+                </div>
               </div>
 
-              {error && (
-                <div className="p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-400 text-sm">
-                  {error}
-                </div>
-              )}
-
               <Button
+                className="pill-button bg-[#7FFF00] text-black hover:bg-[#6FEF00] w-full py-6 text-lg"
                 onClick={handleGenerate}
                 disabled={loading}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 py-6 text-lg"
               >
                 {loading ? (
                   <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    {loadingMessage || 'Generating Your Roadmap...'}
+                    Generating Your Roadmap...
                   </>
                 ) : (
-                  <>
-                    <Calendar className="w-5 h-5 mr-2" />
-                    Generate Personalized Roadmap
-                  </>
+                  'Generate Personalized Roadmap'
                 )}
               </Button>
-            </CardContent>
-          </Card>
-        )}
 
-        {/* Roadmap Display */}
-        {roadmap && (
-          <div className="space-y-6">
-            {/* Progress Overview */}
-            <Card className="bg-gradient-to-br from-indigo-900/50 to-purple-900/50 border-2 border-indigo-500/30">
-              <CardHeader>
-                <CardTitle className="text-2xl flex items-center gap-2">
-                  <Trophy className="w-6 h-6 text-yellow-400" />
-                  Your Progress
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-3 gap-4 mb-4">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-indigo-400">{roadmap.totalWeeks}</div>
-                    <div className="text-sm text-gray-400">Total Weeks</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-purple-400">{roadmap.totalHours}h</div>
-                    <div className="text-sm text-gray-400">Total Hours</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-green-400">{completedWeeks}/{roadmap.totalWeeks}</div>
-                    <div className="text-sm text-gray-400">Completed</div>
-                  </div>
-                </div>
-                <div className="h-3 bg-gray-800 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all"
-                    style={{ width: `${progressPercentage}%` }}
-                  />
-                </div>
-              </CardContent>
+              {error && (
+                <div className="text-red-400 text-sm">{error}</div>
+              )}
             </Card>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {/* Rich Metrics Dashboard */}
 
-            {/* Weekly Timeline */}
-            <div className="space-y-4">
-              {roadmap.weeklyPlan.map((week, idx) => (
-                <Card 
-                  key={idx} 
-                  className={`
-                    bg-gray-900/50 border-2 transition-all
-                    ${week.isPlaceholder ? 'border-blue-500/20 opacity-60 animate-pulse' : 
-                      week.completed ? 'border-green-500/30 opacity-75' : 'border-gray-700'}
-                  `}
-                >
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          {week.isPlaceholder ? (
-                            <Loader2 className="w-6 h-6 text-blue-400 animate-spin" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl">
+              {/* Progress Trend */}
+              <div className="dashboard-card p-6">
+                <MiniTrendChart 
+                  data={[0, 10, 25, 40, 55, progressPercentage]} 
+                  label="Completion Trend"
+                  value={`${Math.round(progressPercentage)}%`}
+                  trend={progressPercentage > 0 ? "+On Track" : "Start Now"}
+                  color="green"
+                  height={80}
+                />
+              </div>
+
+              {/* Weeks Remaining Density */}
+              <div className="dashboard-card p-6">
+                <DotMatrix 
+                  rows={4} 
+                  cols={6} 
+                  activeCount={(roadmap.totalWeeks - completedWeeks) * 4}
+                  label="Weeks Remaining"
+                  value={`${roadmap.totalWeeks - completedWeeks} Weeks`}
+                  color="orange"
+                />
+              </div>
+
+              {/* Hours Balance */}
+              <div className="dashboard-card p-6">
+                <MiniTrendChart 
+                  data={[5, 8, 12, 15, 10, hoursPerWeek]} 
+                  label="Weekly Hours"
+                  value={`${hoursPerWeek}h`}
+                  trend="Target"
+                  color="white"
+                  height={80}
+                />
+              </div>
+            </div>
+
+
+            {/* Timeline View */}
+            <div className="max-w-6xl">
+              <h3 className="text-xl font-bold text-white mb-4">Timeline</h3>
+              <Card className="dashboard-card p-6 space-y-4">
+                {roadmap.weeklyPlan.map((week, idx) => {
+                  const percentage = week.completed ? 100 : idx === 0 ? 50 : 0;
+                  const color = week.completed ? 'green' : idx === 0 ? 'orange' : 'white';
+                  
+                  return (
+                    <div key={idx} className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => toggleWeekCompletion(idx)}
+                            className="transition-all"
+                          >
+                            {week.completed ? (
+                              <CheckCircle2 className="w-6 h-6 text-[#7FFF00]" />
+                            ) : (
+                              <Circle className="w-6 h-6 text-gray-600" />
+                            )}
+                          </button>
+                          <span className="font-semibold text-white">
+                            Week {week.week}: {week.title}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => setExpandedWeek(expandedWeek === idx ? null : idx)}
+                          className="text-gray-400 hover:text-white transition-colors"
+                        >
+                          {expandedWeek === idx ? (
+                            <ChevronUp className="w-5 h-5" />
                           ) : (
-                            <Button
-                              onClick={() => toggleWeekCompletion(idx)}
-                              variant="ghost"
-                              size="sm"
-                              className="p-0 h-auto"
-                            >
-                              {week.completed ? (
-                                <CheckCircle2 className="w-6 h-6 text-green-400" />
-                              ) : (
-                                <Circle className="w-6 h-6 text-gray-600" />
-                              )}
-                            </Button>
+                            <ChevronDown className="w-5 h-5" />
                           )}
+                        </button>
+                      </div>
+                      
+                      <TimelineBar 
+                        percentage={percentage}
+                        color={color}
+                        showPercentage={week.completed}
+                      />
+
+                      {/* Expanded Details */}
+                      {expandedWeek === idx && (
+                        <div className="mt-4 pl-9 space-y-4">
+                          {/* Resources */}
                           <div>
-                            <Badge variant="outline" className={`
-                              ${week.isPlaceholder 
-                                ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' 
-                                : 'bg-indigo-500/20 text-indigo-400 border-indigo-500/50'}
-                            `}>
-                              Week {week.week}
-                            </Badge>
+                            <h4 className="text-sm font-semibold text-white mb-2">
+                              📚 Learning Resources
+                            </h4>
+                            <div className="space-y-2">
+                              {week.resources.map((resource, rIdx) => (
+                                <a
+                                  key={rIdx}
+                                  href={resource.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center justify-between p-3 bg-black rounded-lg border border-[#2a2a2a] hover:border-[#7FFF00] transition-all group"
+                                >
+                                  <div>
+                                    <div className="text-sm font-medium text-white group-hover:text-[#7FFF00]">
+                                      {resource.title}
+                                    </div>
+                                    <div className="text-xs text-gray-500">
+                                      {resource.type} • {resource.duration}
+                                    </div>
+                                  </div>
+                                  <ExternalLink className="w-4 h-4 text-gray-500 group-hover:text-[#7FFF00]" />
+                                </a>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                        <CardTitle className={week.completed ? 'line-through text-gray-500' : ''}>
-                          {week.title}
-                        </CardTitle>
-                        {!week.isPlaceholder && (
-                          <CardDescription className="flex items-center gap-4 mt-2">
-                            <span className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              {week.estimatedHours} hours
-                            </span>
-                            <span>Skills: {Array.isArray(week.skills) ? week.skills.join(', ') : (week as any).skill || 'N/A'}</span>
-                          </CardDescription>
-                        )}
-                      </div>
-                    </div>
-                  </CardHeader>
-                  {!week.isPlaceholder && (
-                    <CardContent className="space-y-4">
-                      {/* Resources */}
-                      <div>
-                        <h4 className="font-semibold mb-2">📚 Learning Resources</h4>
-                        <div className="space-y-2">
-                          {week.resources.map((resource, rIdx) => (
-                            <a
-                              key={rIdx}
-                              href={resource.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center justify-between p-3 bg-gray-800/50 hover:bg-gray-800 rounded-lg border border-gray-700 hover:border-indigo-500/50 transition-all"
-                            >
-                              <div className="flex items-center gap-3">
-                                <span className="text-2xl">{getResourceIcon(resource.type)}</span>
-                                <div>
-                                  <div className="font-medium">{resource.title}</div>
-                                  <div className="text-xs text-gray-500">{resource.type} • {resource.duration}</div>
-                                </div>
-                              </div>
-                              <ExternalLink className="w-4 h-4 text-gray-500" />
-                            </a>
-                          ))}
-                        </div>
-                      </div>
 
-                      <Separator className="bg-gray-700" />
+                          {/* Practice Project */}
+                          <div>
+                            <h4 className="text-sm font-semibold text-white mb-2">
+                              🛠️ Practice Project
+                            </h4>
+                            <div className="p-3 bg-[#FF8C00]/10 border border-[#FF8C00]/30 rounded-lg text-sm text-gray-300">
+                              {week.practiceProject}
+                            </div>
+                          </div>
 
-                      {/* Practice Project */}
-                      <div>
-                        <h4 className="font-semibold mb-2">🛠️ Practice Project</h4>
-                        <div className="p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg">
-                          {week.practiceProject}
-                        </div>
-                      </div>
-
-                      {/* Milestones */}
-                      {week.milestones && week.milestones.length > 0 && (
-                        <div>
-                          <h4 className="font-semibold mb-2">🎯 Milestones</h4>
-                          <ul className="space-y-1">
-                            {week.milestones.map((milestone: string, mIdx: number) => (
-                              <li key={mIdx} className="text-sm text-gray-400 flex items-center gap-2">
-                                <span className="text-green-400">✓</span>
-                                {milestone}
-                              </li>
-                            ))}
-                          </ul>
+                          {/* Milestones */}
+                          {week.milestones && week.milestones.length > 0 && (
+                            <div>
+                              <h4 className="text-sm font-semibold text-white mb-2">
+                                🎯 Milestones
+                              </h4>
+                              <ul className="space-y-1">
+                                {week.milestones.map((milestone: string, mIdx: number) => (
+                                  <li key={mIdx} className="text-sm text-gray-400 flex items-center gap-2">
+                                    <span className="text-[#7FFF00]">✓</span>
+                                    {milestone}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
                         </div>
                       )}
-                    </CardContent>
-                  )}
-                </Card>
-              ))}
+                    </div>
+                  );
+                })}
+              </Card>
             </div>
 
             {/* Actions */}
-            <div className="flex gap-4">
+            <div className="flex gap-4 max-w-4xl">
               <Button
+                className="pill-button bg-white text-black hover:bg-gray-200"
                 onClick={() => {
                   setRoadmap(null);
-                  localStorage.removeItem('roadmap');
+                  setExpandedWeek(null);
                 }}
-                variant="outline"
-                className="flex-1 border-gray-700"
               >
                 Generate New Roadmap
               </Button>
               <Button
+                className="pill-button bg-black text-white border border-[#2a2a2a] hover:bg-[#1a1a1a]"
                 onClick={() => router.push('/upload')}
-                className="flex-1 bg-indigo-600 hover:bg-indigo-700"
               >
                 Start Over with New Resume
               </Button>
