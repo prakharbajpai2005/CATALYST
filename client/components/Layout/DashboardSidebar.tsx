@@ -69,7 +69,7 @@ export default function DashboardSidebar() {
       {/* User Profile */}
       <div className="mt-auto">
         <button className="w-14 h-14 rounded-full bg-[#1a1a1a] border-2 border-[#2a2a2a] flex items-center justify-center hover:border-[#7FFF00] transition-all shadow-lg">
-          <User className="w-6 h-6 text-gray-400" />
+          <User className="w-6 h-6 text-black" />
         </button>
       </div>
     </div>

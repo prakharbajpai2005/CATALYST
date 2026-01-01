@@ -146,7 +146,7 @@ export default function MissionTerminal({ userId, skillId, onScoreUpdate, onXPGa
     setLoading(true);
     try {
       const data = await api.completeSimulation(simulationId);
-      
+
       setMessages(prev => [...prev, {
         type: 'system',
         content: `🎉 Mission Complete!\n\nFinal Score: ${data.finalScore}/100\nXP Earned: ${data.xpEarned}`,
@@ -176,7 +176,7 @@ export default function MissionTerminal({ userId, skillId, onScoreUpdate, onXPGa
         <div className="flex-1 overflow-y-auto p-4" ref={scrollRef}>
           <div className="space-y-4">
             {messages.length === 0 && !loading && (
-              <div className="text-center text-gray-500 py-12">
+              <div className="text-center text-black py-12">
                 <TerminalIcon className="w-16 h-16 mx-auto mb-4 opacity-20" />
                 <p>Select a skill from the Skill Tree to start a mission</p>
               </div>
@@ -212,7 +212,7 @@ export default function MissionTerminal({ userId, skillId, onScoreUpdate, onXPGa
             ))}
 
             {loading && (
-              <div className="flex items-center gap-2 text-gray-400">
+              <div className="flex items-center gap-2 text-black">
                 <Loader2 className="w-4 h-4 animate-spin" />
                 <span>Processing...</span>
               </div>
@@ -237,8 +237,8 @@ export default function MissionTerminal({ userId, skillId, onScoreUpdate, onXPGa
                   <Send className="w-4 h-4" />
                 </Button>
               </form>
-              <Button 
-                onClick={handleComplete} 
+              <Button
+                onClick={handleComplete}
                 disabled={loading || messages.length < 2}
                 variant="outline"
                 className="w-full border-green-500/50 text-green-400 hover:bg-green-500/10"
@@ -247,7 +247,7 @@ export default function MissionTerminal({ userId, skillId, onScoreUpdate, onXPGa
               </Button>
             </>
           ) : (
-            <div className="text-center text-gray-500">
+            <div className="text-center text-black">
               {skillId ? 'Loading mission...' : 'Waiting for skill selection...'}
             </div>
           )}

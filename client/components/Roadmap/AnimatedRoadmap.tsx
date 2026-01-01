@@ -55,8 +55,8 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
             <Card className={`
               relative overflow-hidden
               border-2 transition-all duration-300
-              ${week.completed 
-                ? 'bg-gradient-to-br from-green-500/10 to-emerald-500/5 border-green-500/30' 
+              ${week.completed
+                ? 'bg-gradient-to-br from-green-500/10 to-emerald-500/5 border-green-500/30'
                 : 'glass-card hover:border-indigo-500/50'
               }
             `}>
@@ -99,23 +99,23 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
                     </motion.div>
 
                     <div className="flex-1">
-                      <h3 className="text-xl font-bold text-white mb-1">
+                      <h3 className="text-xl font-bold text-black mb-1">
                         {week.title}
                       </h3>
                       <div className="flex items-center gap-2 flex-wrap">
                         <Badge className="bg-indigo-500/20 text-indigo-300 border-indigo-500/30">
                           {week.skill}
                         </Badge>
-                        <Badge variant="outline" className="text-gray-400 border-white/20">
+                        <Badge variant="outline" className="text-black border-white/20">
                           {week.estimatedHours}h
                         </Badge>
                         {week.topics.slice(0, 2).map((topic) => (
-                          <Badge key={topic} variant="outline" className="text-gray-400 border-white/10">
+                          <Badge key={topic} variant="outline" className="text-black border-white/10">
                             {topic}
                           </Badge>
                         ))}
                         {week.topics.length > 2 && (
-                          <Badge variant="outline" className="text-gray-400 border-white/10">
+                          <Badge variant="outline" className="text-black border-white/10">
                             +{week.topics.length - 2} more
                           </Badge>
                         )}
@@ -127,7 +127,7 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
                     variant="ghost"
                     size="sm"
                     onClick={() => setExpandedWeek(expandedWeek === week.week ? null : week.week)}
-                    className="text-gray-400 hover:text-white"
+                    className="text-black hover:text-black"
                   >
                     {expandedWeek === week.week ? <ChevronUp /> : <ChevronDown />}
                   </Button>
@@ -146,7 +146,7 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
                       <div className="pt-4 border-t border-white/10 space-y-4">
                         {/* Topics */}
                         <div>
-                          <h4 className="text-sm font-semibold text-gray-300 mb-2">Topics to Cover</h4>
+                          <h4 className="text-sm font-semibold text-black mb-2">Topics to Cover</h4>
                           <div className="flex flex-wrap gap-2">
                             {week.topics.map((topic, idx) => (
                               <motion.div
@@ -155,7 +155,7 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
                                 animate={{ scale: 1 }}
                                 transition={{ delay: idx * 0.05 }}
                               >
-                                <Badge variant="outline" className="text-gray-300 border-white/20">
+                                <Badge variant="outline" className="text-black border-white/20">
                                   {topic}
                                 </Badge>
                               </motion.div>
@@ -165,7 +165,7 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
 
                         {/* Resources */}
                         <div>
-                          <h4 className="text-sm font-semibold text-gray-300 mb-2">Learning Resources</h4>
+                          <h4 className="text-sm font-semibold text-black mb-2">Learning Resources</h4>
                           <div className="space-y-2">
                             {week.resources.map((resource, idx) => (
                               <motion.a
@@ -188,14 +188,14 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
                                   {getResourceIcon(resource.type)}
                                 </span>
                                 <div className="flex-1">
-                                  <div className="text-sm font-medium text-white group-hover:text-indigo-300 transition-colors">
+                                  <div className="text-sm font-medium text-black group-hover:text-indigo-300 transition-colors">
                                     {resource.title}
                                   </div>
-                                  <div className="text-xs text-gray-400">
+                                  <div className="text-xs text-black">
                                     {resource.type} {resource.duration && `• ${resource.duration}`}
                                   </div>
                                 </div>
-                                <span className="text-gray-400 group-hover:text-indigo-400 transition-colors">
+                                <span className="text-black group-hover:text-indigo-400 transition-colors">
                                   →
                                 </span>
                               </motion.a>
@@ -206,7 +206,7 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
                         {/* Milestones */}
                         {week.milestones.length > 0 && (
                           <div>
-                            <h4 className="text-sm font-semibold text-gray-300 mb-2">Milestones</h4>
+                            <h4 className="text-sm font-semibold text-black mb-2">Milestones</h4>
                             <div className="space-y-2">
                               {week.milestones.map((milestone, idx) => (
                                 <motion.div
@@ -214,7 +214,7 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
                                   initial={{ x: -10, opacity: 0 }}
                                   animate={{ x: 0, opacity: 1 }}
                                   transition={{ delay: idx * 0.05 }}
-                                  className="flex items-center gap-2 text-sm text-gray-300"
+                                  className="flex items-center gap-2 text-sm text-black"
                                 >
                                   <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
                                   {milestone}
@@ -233,19 +233,19 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
                           <h4 className="text-sm font-semibold text-purple-300 mb-2">
                             🎯 Practice Project
                           </h4>
-                          <p className="text-sm text-gray-300">
+                          <p className="text-sm text-black">
                             {week.practiceProject}
                           </p>
                         </div>
 
                         {/* Mark Complete Button */}
                         {!week.completed && (
-                          <Button 
+                          <Button
                             onClick={() => onWeekComplete?.(week.week)}
                             className="
                               w-full bg-gradient-to-r from-indigo-500 to-cyan-500
                               hover:from-indigo-600 hover:to-cyan-600
-                              text-white font-semibold
+                              text-black font-semibold
                             "
                           >
                             Mark Week {week.week} Complete

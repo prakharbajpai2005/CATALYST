@@ -26,7 +26,7 @@ export default function DashboardPage() {
     try {
       // Try to get user ID from localStorage
       let storedUserId = localStorage.getItem('skillbridge_user_id');
-      
+
       if (storedUserId) {
         // Try to fetch existing user
         try {
@@ -41,7 +41,7 @@ export default function DashboardPage() {
           localStorage.removeItem('skillbridge_user_id');
         }
       }
-      
+
       // Create new user
       const newUser = await api.createUser('demo_user_' + Date.now(), 'demo@skillbridge.com');
       setUserId(newUser._id);
@@ -59,7 +59,7 @@ export default function DashboardPage() {
       const data = await api.updateXP(userId, xpGained);
       setUserLevel(data.level);
       setCurrentXP(data.currentXP);
-      
+
       if (data.leveledUp) {
         // Show level up animation/notification
         console.log('🎉 Level Up!', data.level);
@@ -81,7 +81,7 @@ export default function DashboardPage() {
             <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               Skill-Bridge
             </h1>
-            <p className="text-xs text-gray-400">Learn by Doing</p>
+            <p className="text-xs text-black">Learn by Doing</p>
           </div>
         </div>
       </header>
@@ -91,8 +91,8 @@ export default function DashboardPage() {
         {/* Left Sidebar - Skill Tree */}
         <div className="col-span-3 bg-gray-900/50 backdrop-blur-sm rounded-lg border-2 border-purple-500/20 overflow-hidden">
           {userCreated && userId && (
-            <SkillTree 
-              userId={userId} 
+            <SkillTree
+              userId={userId}
               onSkillSelect={setSelectedSkill}
             />
           )}

@@ -100,15 +100,15 @@
   --muted: oklch(0.15 0 0);
   --muted-foreground: oklch(0.5 0 0);
   --accent: oklch(0.88 0.25 127);
-  /* Neon green #7FFF00 */
+  /* Neon Yellow #FACC15 */
   --accent-foreground: oklch(0 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(0.16 0 0);
   /* Subtle border #2a2a2a */
   --input: oklch(0.16 0 0);
   --ring: oklch(0.3 0 0);
-  --chart-1: oklch(0.88 0.25 127);
-  /* Green */
+  --chart-1: oklch(0.85 0.18 85);
+  /* Yellow */
   --chart-2: oklch(0.7 0.25 60);
   /* Orange */
   --chart-3: oklch(1 0 0);
@@ -118,7 +118,7 @@
   --sidebar: oklch(0 0 0);
   /* Pure black sidebar */
   --sidebar-foreground: oklch(1 0 0);
-  --sidebar-primary: oklch(0.88 0.25 127);
+  --sidebar-primary: oklch(0.85 0.18 85);
   --sidebar-primary-foreground: oklch(0 0 0);
   --sidebar-accent: oklch(0.15 0 0);
   --sidebar-accent-foreground: oklch(1 0 0);
@@ -126,8 +126,8 @@
   --sidebar-ring: oklch(0.3 0 0);
 
   /* Custom Dashboard Colors */
-  --dashboard-green: oklch(0.88 0.25 127);
-  /* #7FFF00 */
+  --dashboard-green: oklch(0.85 0.18 85);
+  /* #FACC15 */
   --dashboard-orange: oklch(0.7 0.25 60);
   /* #FF8C00 */
   --dashboard-white: oklch(1 0 0);
@@ -190,8 +190,8 @@
   }
 
   .timeline-bar-fill.green {
-    background: linear-gradient(90deg, #7FFF00 0%, #6FEF00 100%);
-    box-shadow: 0 2px 8px rgba(127, 255, 0, 0.4);
+    background: linear-gradient(90deg, #FACC15 0%, #EAB308 100%);
+    box-shadow: 0 2px 8px rgba(250, 204, 21, 0.4);
   }
 
   .timeline-bar-fill.orange {

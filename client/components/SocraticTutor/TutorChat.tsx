@@ -83,9 +83,9 @@ export default function SocraticTutor() {
                 }}
                 className="absolute inset-0 rounded-full border-2 border-purple-400"
               />
-              
+
               <MessageCircle className="w-6 h-6" />
-              
+
               {/* Notification dot */}
               <motion.div
                 animate={{ scale: [1, 1.2, 1] }}
@@ -134,15 +134,15 @@ export default function SocraticTutor() {
                   />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-white">Socratic Tutor</h3>
-                  <p className="text-xs text-gray-400">Always online</p>
+                  <h3 className="font-semibold text-black">Socratic Tutor</h3>
+                  <p className="text-xs text-black">Always online</p>
                 </div>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-white"
+                className="text-black hover:text-black"
               >
                 <X className="w-5 h-5" />
               </Button>
@@ -162,8 +162,8 @@ export default function SocraticTutor() {
                     <div className={`
                       max-w-[80%] p-3 rounded-2xl
                       ${message.role === 'user'
-                        ? 'bg-gradient-to-br from-indigo-500 to-cyan-500 text-white'
-                        : 'bg-white/5 border border-white/10 text-gray-100'
+                        ? 'bg-gradient-to-br from-indigo-500 to-cyan-500 text-black'
+                        : 'bg-white/5 border border-white/10 text-black'
                       }
                     `}>
                       <p className="text-sm">{message.content}</p>
@@ -186,7 +186,7 @@ export default function SocraticTutor() {
                   className="
                     flex-1 bg-white/5 border-white/10
                     focus:border-purple-500/50
-                    text-white placeholder:text-gray-500
+                    text-black placeholder:text-black
                   "
                 />
                 <Button
