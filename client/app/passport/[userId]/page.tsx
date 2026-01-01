@@ -94,7 +94,7 @@ export default function PassportPage({ params }: { params: { userId: string } })
           <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
             Skill Passport
           </h1>
-          <p className="text-gray-400">Proof of Competence, Not Just Completion</p>
+          <p className="text-black">Proof of Competence, Not Just Completion</p>
         </div>
 
         {/* User Info Card */}
@@ -103,7 +103,7 @@ export default function PassportPage({ params }: { params: { userId: string } })
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-2xl">{passport.user.username}</CardTitle>
-                <CardDescription className="text-gray-300">{passport.user.email}</CardDescription>
+                <CardDescription className="text-black">{passport.user.email}</CardDescription>
               </div>
               <div className="text-right">
                 <div className="flex items-center gap-2 justify-end mb-1">
@@ -124,7 +124,7 @@ export default function PassportPage({ params }: { params: { userId: string } })
             <CardContent className="pt-6 text-center">
               <Target className="w-8 h-8 text-green-400 mx-auto mb-2" />
               <div className="text-3xl font-bold text-green-400">{passport.statistics.totalMissionsCompleted}</div>
-              <div className="text-xs text-gray-400 mt-1">Missions Completed</div>
+              <div className="text-xs text-black mt-1">Missions Completed</div>
             </CardContent>
           </Card>
 
@@ -132,7 +132,7 @@ export default function PassportPage({ params }: { params: { userId: string } })
             <CardContent className="pt-6 text-center">
               <Award className="w-8 h-8 text-blue-400 mx-auto mb-2" />
               <div className="text-3xl font-bold text-blue-400">{passport.statistics.averageScore}</div>
-              <div className="text-xs text-gray-400 mt-1">Average Score</div>
+              <div className="text-xs text-black mt-1">Average Score</div>
             </CardContent>
           </Card>
 
@@ -140,7 +140,7 @@ export default function PassportPage({ params }: { params: { userId: string } })
             <CardContent className="pt-6 text-center">
               <Trophy className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
               <div className="text-3xl font-bold text-yellow-400">{passport.statistics.skillsMastered}</div>
-              <div className="text-xs text-gray-400 mt-1">Skills Mastered</div>
+              <div className="text-xs text-black mt-1">Skills Mastered</div>
             </CardContent>
           </Card>
 
@@ -148,7 +148,7 @@ export default function PassportPage({ params }: { params: { userId: string } })
             <CardContent className="pt-6 text-center">
               <Clock className="w-8 h-8 text-purple-400 mx-auto mb-2" />
               <div className="text-3xl font-bold text-purple-400">{passport.statistics.totalTimeInvested.split(' ')[0]}</div>
-              <div className="text-xs text-gray-400 mt-1">Minutes Invested</div>
+              <div className="text-xs text-black mt-1">Minutes Invested</div>
             </CardContent>
           </Card>
         </div>
@@ -165,15 +165,15 @@ export default function PassportPage({ params }: { params: { userId: string } })
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-semibold">{getSkillName(skill.skillId)}</h3>
-                    <p className="text-sm text-gray-400">{skill.completedMissions} missions completed</p>
+                    <p className="text-sm text-black">{skill.completedMissions} missions completed</p>
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold text-green-400">{skill.averageScore}</div>
-                    <div className="text-xs text-gray-400">Avg Score</div>
+                    <div className="text-xs text-black">Avg Score</div>
                   </div>
                 </div>
                 <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all"
                     style={{ width: `${skill.averageScore}%` }}
                   />
@@ -194,7 +194,7 @@ export default function PassportPage({ params }: { params: { userId: string } })
               <div key={idx} className="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
                 <div>
                   <h4 className="font-semibold">{achievement.missionTitle}</h4>
-                  <p className="text-sm text-gray-400">{getSkillName(achievement.skillId)}</p>
+                  <p className="text-sm text-black">{getSkillName(achievement.skillId)}</p>
                 </div>
                 <div className="text-right">
                   <Badge className={`
@@ -204,7 +204,7 @@ export default function PassportPage({ params }: { params: { userId: string } })
                   `}>
                     {achievement.score}/100
                   </Badge>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-black mt-1">
                     {new Date(achievement.completedAt).toLocaleDateString()}
                   </p>
                 </div>
@@ -226,7 +226,7 @@ export default function PassportPage({ params }: { params: { userId: string } })
         </div>
 
         {/* Footer */}
-        <div className="text-center text-sm text-gray-500 mt-8">
+        <div className="text-center text-sm text-black mt-8">
           Generated on {new Date(passport.generatedAt).toLocaleString()}
         </div>
       </div>

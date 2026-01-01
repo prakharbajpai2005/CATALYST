@@ -41,12 +41,12 @@ export default function SkillGapHeatmap({ skills }: SkillGapHeatmapProps) {
 
       // Calculate gap percentage (0-100)
       const gapPercentage = ((skill.targetLevel - skill.currentLevel) / skill.targetLevel) * 100;
-      
+
       // Gradient color based on gap
       // Low gap (proficient): Indigo to Cyan
       // High gap (missing): Pink to Purple
       let hue, saturation, lightness;
-      
+
       if (gapPercentage > 70) {
         // Critical gap - Neon pink/purple
         hue = 330 - (gapPercentage - 70) * 0.5;
@@ -110,15 +110,15 @@ export default function SkillGapHeatmap({ skills }: SkillGapHeatmapProps) {
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     const cellSize = 60;
     const gap = 4;
     const cols = Math.floor(canvas.width / (cellSize + gap));
-    
+
     const col = Math.floor(x / (cellSize + gap));
     const row = Math.floor(y / (cellSize + gap));
     const idx = row * cols + col;
-    
+
     if (idx >= 0 && idx < skills.length) {
       setHoveredSkill(skills[idx]);
       setMousePos({ x: e.clientX, y: e.clientY });
@@ -139,7 +139,7 @@ export default function SkillGapHeatmap({ skills }: SkillGapHeatmapProps) {
           <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
             Skill Gap Heatmap
           </h2>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-sm text-black mt-1">
             Darker colors = larger skill gaps • Hover for details
           </p>
         </div>
@@ -148,15 +148,15 @@ export default function SkillGapHeatmap({ skills }: SkillGapHeatmapProps) {
         <div className="flex items-center gap-6 mb-4 flex-wrap">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded bg-gradient-to-r from-indigo-500 to-cyan-500" />
-            <span className="text-xs text-gray-400">Proficient (0-40%)</span>
+            <span className="text-xs text-black">Proficient (0-40%)</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded bg-gradient-to-r from-purple-500 to-purple-400" />
-            <span className="text-xs text-gray-400">Needs Work (40-70%)</span>
+            <span className="text-xs text-black">Needs Work (40-70%)</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded bg-gradient-to-r from-pink-500 to-purple-500 shadow-[0_0_10px_rgba(236,72,153,0.5)]" />
-            <span className="text-xs text-gray-400">Critical Gap (70-100%)</span>
+            <span className="text-xs text-black">Critical Gap (70-100%)</span>
           </div>
         </div>
 
@@ -188,22 +188,22 @@ export default function SkillGapHeatmap({ skills }: SkillGapHeatmapProps) {
             shadow-[0_0_20px_rgba(99,102,241,0.3)]
           "
         >
-          <h4 className="font-semibold text-white mb-2">{hoveredSkill.name}</h4>
+          <h4 className="font-semibold text-black mb-2">{hoveredSkill.name}</h4>
           <div className="space-y-1 text-sm">
             <div className="flex justify-between gap-4">
-              <span className="text-gray-400">Current:</span>
+              <span className="text-black">Current:</span>
               <Badge className="bg-indigo-500/20 text-indigo-300 border-indigo-500/30">
                 Level {hoveredSkill.currentLevel}
               </Badge>
             </div>
             <div className="flex justify-between gap-4">
-              <span className="text-gray-400">Target:</span>
+              <span className="text-black">Target:</span>
               <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-500/30">
                 Level {hoveredSkill.targetLevel}
               </Badge>
             </div>
             <div className="flex justify-between gap-4">
-              <span className="text-gray-400">Gap:</span>
+              <span className="text-black">Gap:</span>
               <Badge className="bg-pink-500/20 text-pink-300 border-pink-500/30">
                 {hoveredSkill.targetLevel - hoveredSkill.currentLevel} levels
               </Badge>

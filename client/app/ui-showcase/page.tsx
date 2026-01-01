@@ -100,7 +100,7 @@ export default function UIShowcasePage() {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent mb-2">
             Premium SaaS UI Showcase
           </h1>
-          <p className="text-gray-400 mb-8">
+          <p className="text-black mb-8">
             Glassmorphism • Dark Mode • Neon Accents • Smooth Animations
           </p>
 
@@ -121,7 +121,7 @@ export default function UIShowcasePage() {
                   <div className="space-y-3">
                     {demoSkills.filter(s => s.currentLevel >= 3).map((skill) => (
                       <div key={skill.name} className="flex items-center justify-between">
-                        <span className="text-gray-300">{skill.name}</span>
+                        <span className="text-black">{skill.name}</span>
                         <Badge className="bg-gradient-to-r from-indigo-500 to-cyan-500 border-0">
                           Level {skill.currentLevel}
                         </Badge>
@@ -137,7 +137,7 @@ export default function UIShowcasePage() {
                   <div className="space-y-3">
                     {demoSkills.filter(s => s.targetLevel - s.currentLevel >= 3).map((skill) => (
                       <div key={skill.name} className="flex items-center justify-between">
-                        <span className="text-gray-300">{skill.name}</span>
+                        <span className="text-black">{skill.name}</span>
                         <Badge className="bg-gradient-to-r from-pink-500 to-purple-500 border-0">
                           Gap: {skill.targetLevel - skill.currentLevel}
                         </Badge>
@@ -171,7 +171,7 @@ export default function UIShowcasePage() {
                       <h3 className="text-lg font-semibold text-white mb-2">
                         {feature.title}
                       </h3>
-                      <p className="text-sm text-gray-400">
+                      <p className="text-sm text-black">
                         {feature.desc}
                       </p>
                     </Card>
@@ -195,7 +195,7 @@ export default function UIShowcasePage() {
                   ].map((item) => (
                     <div key={item} className="flex items-center gap-2">
                       <span className="text-green-400">✓</span>
-                      <span className="text-gray-300">{item}</span>
+                      <span className="text-black">{item}</span>
                     </div>
                   ))}
                 </div>

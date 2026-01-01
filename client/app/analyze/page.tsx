@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import DashboardSidebar from '@/components/Layout/DashboardSidebar';
+
 import MetricCard from '@/components/ui/metric-card';
 import TimelineBar from '@/components/ui/timeline-bar';
 import DotMatrix from '@/components/ui/dot-matrix';
@@ -98,44 +98,43 @@ export default function AnalyzePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black">
-      <DashboardSidebar />
-      
-      <div className="ml-20 p-8">
+    <div className="">
+
+      <div className="p-8 flex flex-col items-center w-full">
         {/* Header */}
-        <div className="mb-8">
-          <div className="text-sm text-gray-400 mb-2">STEP 2 OF 3</div>
-          <h1 className="text-4xl font-bold text-white mb-2">Skill Gap Analysis</h1>
-          <p className="text-gray-400">Compare your skills with your target role</p>
+        <div className="mb-8 mt-15 flex flex-col items-center justify-center">
+          <div className="text-sm !text-black mb-2">STEP 2 OF 3</div>
+          <h1 className="text-4xl font-bold !text-black mb-2">Skill Gap Analysis</h1>
+          <p className="!text-black">Compare your skills with your target role</p>
         </div>
 
         {!analysis ? (
           <div className="max-w-2xl space-y-6">
             {/* Input Form */}
-            <Card className="dashboard-card p-6 space-y-4">
+            <Card className="dashboard-card w-100 p-6 space-y-4">
               <div>
-                <label className="text-sm text-gray-400 mb-2 block">Target Role</label>
+                <label className="text-sm  mb-2 !text-black  block">Target Role</label>
                 <Input
                   placeholder="e.g., Full Stack Developer"
                   value={targetRole}
                   onChange={(e) => setTargetRole(e.target.value)}
-                  className="bg-black border-[#2a2a2a] text-white"
+                  className="bg-black border-[#2a2a2a] !text-black"
                 />
               </div>
 
               <div>
-                <label className="text-sm text-gray-400 mb-2 block">Job Description</label>
+                <label className="text-sm  mb-2 !text-black block">Job Description</label>
                 <Textarea
                   placeholder="Paste the complete job description here..."
                   rows={12}
                   value={jobDescription}
                   onChange={(e) => setJobDescription(e.target.value)}
-                  className="bg-black border-[#2a2a2a] text-white font-mono text-sm"
+                  className="bg-black border-[#2a2a2a] !text-black font-mono text-sm"
                 />
               </div>
 
               <Button
-                className="pill-button bg-[#7FFF00] text-black hover:bg-[#6FEF00] w-full"
+                className="pill-button bg-yellow-400 !text-black hover:bg-[#6FEF00] w-full"
                 onClick={handleAnalyze}
                 disabled={analyzing}
               >
@@ -157,8 +156,8 @@ export default function AnalyzePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl">
               {/* Readiness Trend - Line Chart Style */}
               <div className="dashboard-card p-6">
-                <MiniTrendChart 
-                  data={[45, 52, 49, 60, 58, 65, analysis.hiringReadinessScore]} 
+                <MiniTrendChart
+                  data={[45, 52, 49, 60, 58, 65, analysis.hiringReadinessScore]}
                   label="Readiness Trend"
                   value={`${analysis.hiringReadinessScore}%`}
                   trend="+2.4% this week"
@@ -169,9 +168,9 @@ export default function AnalyzePage() {
 
               {/* Skill Gaps - Dot Matrix Style */}
               <div className="dashboard-card p-6">
-                <DotMatrix 
-                  rows={5} 
-                  cols={8} 
+                <DotMatrix
+                  rows={5}
+                  cols={8}
                   activeCount={analysis.skillGaps.length * 2} // Visual representation
                   label="Skill Gap Density"
                   value={`${analysis.skillGaps.length} Gaps`}
@@ -182,19 +181,19 @@ export default function AnalyzePage() {
               {/* Matched Skills - Bubble/Pill Style (simulated with DotMatrix for now or simple metrics) */}
               <div className="dashboard-card p-6 flex flex-col justify-between">
                 <div>
-                  <span className="text-gray-400 text-sm font-medium">Matched Skills</span>
-                  <div className="text-2xl font-bold text-white mt-1">{analysis.matchedSkills.length}</div>
+                  <span className="!text-black text-sm font-medium">Matched Skills</span>
+                  <div className="text-2xl font-bold !text-black mt-1">{analysis.matchedSkills.length}</div>
                 </div>
                 <div className="space-y-3 mt-4">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">Technical</span>
-                    <span className="text-[#7FFF00]">High Match</span>
+                    <span className="!text-black">Technical</span>
+                    <span className="text-[#FACC15]">High Match</span>
                   </div>
                   <div className="timeline-bar h-2 bg-[#2a2a2a]">
                     <div className="timeline-bar-fill green" style={{ width: '80%' }}></div>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">Soft Skills</span>
+                    <span className="!text-black">Soft Skills</span>
                     <span className="text-[#FF8C00]">Medium</span>
                   </div>
                   <div className="timeline-bar h-2 bg-[#2a2a2a]">
@@ -207,37 +206,36 @@ export default function AnalyzePage() {
 
             {/* Skill Gaps */}
             <div className="max-w-6xl">
-              <h3 className="text-xl font-bold text-white mb-4">Skill Gaps to Address</h3>
+              <h3 className="text-xl font-bold !text-black mb-4">Skill Gaps to Address</h3>
               <Card className="dashboard-card p-6 space-y-4">
                 {analysis.skillGaps.map((gap, idx) => {
                   const gapSize = gap.targetLevel - gap.currentLevel;
                   const percentage = (gap.currentLevel / gap.targetLevel) * 100;
-                  
+
                   return (
                     <div key={idx} className="space-y-2">
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="font-semibold text-white">{gap.skill}</span>
-                          <span className="text-xs text-gray-400 ml-2">
+                          <span className="font-semibold !text-black">{gap.skill}</span>
+                          <span className="text-xs !text-black ml-2">
                             {gap.currentLevel}/{gap.targetLevel}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className={`text-xs px-2 py-1 rounded-full ${
-                            gapSize === 0 ? 'bg-[#7FFF00]/20 text-[#7FFF00]' :
+                          <span className={`text-xs px-2 py-1 rounded-full ${gapSize === 0 ? 'bg-[#FACC15]/20 text-[#FACC15]' :
                             gapSize <= 2 ? 'bg-[#FF8C00]/20 text-[#FF8C00]' :
-                            'bg-white/20 text-white'
-                          }`}>
+                              'bg-white/20 !text-black'
+                            }`}>
                             {gapSize === 0 ? '✓ Met' : `↑ ${gapSize} levels`}
                           </span>
-                          <span className="text-xs text-gray-400">{gap.estimatedHours}h</span>
+                          <span className="text-xs !text-black">{gap.estimatedHours}h</span>
                         </div>
                       </div>
-                      <TimelineBar 
+                      <TimelineBar
                         percentage={percentage}
                         color={getGapColor(gapSize)}
                       />
-                      <p className="text-xs text-gray-500">{gap.reason}</p>
+                      <p className="text-xs !text-black">{gap.reason}</p>
                     </div>
                   );
                 })}
@@ -247,15 +245,15 @@ export default function AnalyzePage() {
             {/* Strengths */}
             {analysis.matchedSkills.length > 0 && (
               <div className="max-w-6xl">
-                <h3 className="text-xl font-bold text-white mb-4">Your Strengths</h3>
+                <h3 className="text-xl font-bold !text-black mb-4">Your Strengths</h3>
                 <div className="grid grid-cols-3 gap-4">
                   {analysis.matchedSkills.map((skill, idx) => (
                     <div key={idx} className="dashboard-card p-4">
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-white">{skill.skill}</span>
-                        <span className="text-[#7FFF00]">✓</span>
+                        <span className="font-semibold !text-black">{skill.skill}</span>
+                        <span className="text-[#FACC15]">✓</span>
                       </div>
-                      <div className="text-xs text-gray-400 mt-1">
+                      <div className="text-xs !text-black mt-1">
                         {skill.currentLevel}/{skill.targetLevel} - {skill.status}
                       </div>
                     </div>
@@ -267,13 +265,13 @@ export default function AnalyzePage() {
             {/* Actions */}
             <div className="flex gap-4 max-w-4xl">
               <Button
-                className="pill-button bg-white text-black hover:bg-gray-200"
+                className="pill-button bg-white !text-black hover:bg-gray-200"
                 onClick={() => setAnalysis(null)}
               >
                 Analyze Different Role
               </Button>
               <Button
-                className="pill-button bg-[#7FFF00] text-black hover:bg-[#6FEF00]"
+                className="pill-button bg-[#FACC15] !text-black hover:bg-[#6FEF00]"
                 onClick={() => router.push('/roadmap')}
               >
                 Generate Roadmap →

@@ -47,7 +47,7 @@ export default function SkillTree({ userId, onSkillSelect }: SkillTreeProps) {
       case 'beginner': return 'bg-green-500/20 text-green-400 border-green-500/50';
       case 'intermediate': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
       case 'advanced': return 'bg-red-500/20 text-red-400 border-red-500/50';
-      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/50';
+      default: return 'bg-gray-500/20 text-black border-gray-500/50';
     }
   };
 
@@ -65,7 +65,7 @@ export default function SkillTree({ userId, onSkillSelect }: SkillTreeProps) {
         <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
           Skill Tree
         </h2>
-        <p className="text-sm text-gray-400 mt-1">Choose your path to mastery</p>
+        <p className="text-sm text-black mt-1">Choose your path to mastery</p>
       </div>
 
       <div className="space-y-3">
@@ -74,8 +74,8 @@ export default function SkillTree({ userId, onSkillSelect }: SkillTreeProps) {
             key={skill.id}
             className={`
               border-2 transition-all duration-300 cursor-pointer
-              ${skill.isUnlocked 
-                ? 'bg-gradient-to-br from-gray-900 to-gray-800 border-purple-500/50 hover:border-purple-400 hover:shadow-lg hover:shadow-purple-500/20' 
+              ${skill.isUnlocked
+                ? 'bg-gradient-to-br from-gray-900 to-gray-800 border-purple-500/50 hover:border-purple-400 hover:shadow-lg hover:shadow-purple-500/20'
                 : 'bg-gray-900/50 border-gray-700 opacity-60'
               }
             `}
@@ -88,7 +88,7 @@ export default function SkillTree({ userId, onSkillSelect }: SkillTreeProps) {
                     {skill.isUnlocked ? (
                       <CheckCircle className="w-5 h-5 text-green-400" />
                     ) : (
-                      <Lock className="w-5 h-5 text-gray-500" />
+                      <Lock className="w-5 h-5 text-black" />
                     )}
                     <CardTitle className="text-lg">{skill.name}</CardTitle>
                   </div>
@@ -107,7 +107,7 @@ export default function SkillTree({ userId, onSkillSelect }: SkillTreeProps) {
                   </Badge>
                 </div>
                 {!skill.isUnlocked && skill.prerequisites.length > 0 && (
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-black">
                     🔒 Prerequisites required
                   </span>
                 )}

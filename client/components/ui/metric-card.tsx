@@ -9,10 +9,10 @@ interface MetricCardProps {
   color?: 'green' | 'orange' | 'white' | 'default';
 }
 
-export default function MetricCard({ 
-  label, 
-  value, 
-  icon: Icon, 
+export default function MetricCard({
+  label,
+  value,
+  icon: Icon,
   trend,
   trendValue,
   color = 'default'
@@ -20,27 +20,26 @@ export default function MetricCard({
   const colorClasses = {
     green: 'text-[#7FFF00]',
     orange: 'text-[#FF8C00]',
-    white: 'text-white',
-    default: 'text-white'
+    white: 'text-black',
+    default: 'text-black'
   };
 
   return (
     <div className="metric-card">
       <div className="flex items-start justify-between mb-2">
-        <span className="text-sm text-gray-400">{label}</span>
-        {Icon && <Icon className="w-5 h-5 text-gray-600" />}
+        <span className="text-sm text-black">{label}</span>
+        {Icon && <Icon className="w-5 h-5 text-black" />}
       </div>
-      
+
       <div className={`text-4xl font-bold ${colorClasses[color]} mb-1`}>
         {value}
       </div>
-      
+
       {trend && trendValue && (
-        <div className={`text-xs ${
-          trend === 'up' ? 'text-green-400' : 
-          trend === 'down' ? 'text-red-400' : 
-          'text-gray-400'
-        }`}>
+        <div className={`text-xs ${trend === 'up' ? 'text-green-400' :
+          trend === 'down' ? 'text-red-400' :
+            'text-black'
+          }`}>
           {trend === 'up' && '↑ '}
           {trend === 'down' && '↓ '}
           {trendValue}

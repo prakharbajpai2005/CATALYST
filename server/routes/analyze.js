@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { cacheWrapper, hashObject } = require('../utils/cache');
 const { generateContent } = require('../utils/openrouter');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 
 

@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Sparkles, Zap, Target, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import DashboardSidebar from '@/components/Layout/DashboardSidebar';
+
 import { Orbitron } from 'next/font/google';
 
 const orbitron = Orbitron({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800', '900'] });
@@ -12,41 +12,18 @@ export default function LandingPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-black">
-      <DashboardSidebar />
+    <div className="">
 
       {/* Main Content */}
-      <div className="ml-20">
-        {/* Header */}
-        <header className="fixed top-0 right-0 left-20 z-40 bg-black">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className={`text-3xl font-bold text-white tracking-widest ${orbitron.className}`}>
-                CATALYST
-              </span>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <button className="text-white bg-zinc-700 px-4 py-2 rounded-full">
-                Sign In
-              </button>
-              <Button
-                className="text-white bg-zinc-700 px-4 py-3 rounded-full  hover:bg-yellow-600"
-                onClick={() => router.push('/upload')}
-              >
-                Get Started
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
-          </div>
-        </header>
+      <div className="">
+        {/* Header Removed */}
 
         {/* Hero Section */}
         <section className="min-h-screen flex items-center justify-center px-6">
           <div className="max-w-7xl mx-auto w-full">
             <div className="text-center mb-16 flex flex-col items-center">
 
-              <h1 className={`text-6xl md:text-8xl font-black mb-6 text-white tracking-wide ${orbitron.className}`}>
+              <h1 className={`text-6xl md:text-8xl font-black mb-6 text-black tracking-wide ${orbitron.className}`}>
                 <span className="text-[#7FFF00]">Stop Watching.</span>
                 <br />
                 <span className="text-white">Start Doing.</span>
@@ -56,7 +33,7 @@ export default function LandingPage() {
               </p>
               <Button
                 size="lg"
-                className="flex items-center justify-center gap-2 px-8 py-6 mt-5 text-xl font-semibold text-white transition-all duration-300 rounded-full bg-zinc-700 hover:bg-yellow-600 hover:shadow-lg active:scale-95 mx-auto"
+                className="flex items-center justify-center gap-2 px-8 py-6 mt-5 text-xl font-semibold text-black transition-all duration-300 rounded-full bg-yellow-400 hover:bg-yellow-600 hover:shadow-lg active:scale-95 mx-auto"
                 onClick={() => router.push('/upload')}
               >
                 <span>Start Your Journey</span>
@@ -75,7 +52,7 @@ export default function LandingPage() {
               <h2 className="text-4xl font-bold text-white mb-4">
                 How It Works
               </h2>
-              <p className="text-xl text-gray-400">
+              <p className="text-xl text-white">
                 Get from resume to roadmap in 3 simple steps
               </p>
             </div>
@@ -109,7 +86,7 @@ export default function LandingPage() {
                   <h3 className="text-2xl font-bold text-white mb-3">
                     {item.title}
                   </h3>
-                  <p className="text-gray-400">
+                  <p className="text-white">
                     {item.description}
                   </p>
                 </div>
@@ -132,7 +109,7 @@ export default function LandingPage() {
                   <div className="text-5xl font-bold mb-2" style={{ color: stat.color }}>
                     {stat.value}
                   </div>
-                  <div className="text-sm text-gray-400">{stat.label}</div>
+                  <div className="text-sm text-white">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -144,7 +121,7 @@ export default function LandingPage() {
 
         {/* Footer */}
         <footer className="py-6 px-6 border-t border-[#1a1a1a]">
-          <div className="max-w-7xl mx-auto text-center text-gray-400">
+          <div className="max-w-7xl mx-auto text-center text-white">
             <p>© 2024 Skill-Bridge. All rights reserved. @saurabh24thakur</p>
           </div>
         </footer>

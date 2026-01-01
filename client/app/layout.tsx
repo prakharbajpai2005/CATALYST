@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { Exo_2, Orbitron } from "next/font/google";
+import { Rajdhani, Orbitron } from "next/font/google";
 import "./globals.css";
+import DashboardSidebar from "@/components/Layout/DashboardSidebar";
+import Navbar from "@/components/Layout/Navbar";
 
-const exo2 = Exo_2({
+const rajdhani = Rajdhani({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-  variable: "--font-exo2",
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-rajdhani",
 });
 
 const orbitron = Orbitron({
@@ -26,8 +28,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${exo2.variable} ${orbitron.variable} font-sans antialiased`}>
-        {children}
+      <body className={`${rajdhani.variable} ${orbitron.variable} font-sans antialiased bg-black`}>
+        <DashboardSidebar />
+        <Navbar />
+        <main className="ml-20">
+          {children}
+        </main>
       </body>
     </html>
   );
