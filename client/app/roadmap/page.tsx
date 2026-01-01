@@ -9,8 +9,8 @@ import { useRouter } from 'next/navigation';
 
 import MetricCard from '@/components/ui/metric-card';
 import TimelineBar from '@/components/ui/timeline-bar';
-import DotMatrix from '@/components/ui/dot-matrix';
-import MiniTrendChart from '@/components/ui/mini-trend-chart';
+import ReadinessAreaChart from '@/components/ui/readiness-area-chart';
+import SkillsDistributionChart from '@/components/ui/skills-distribution-chart';
 
 interface Resource {
   title: string;
@@ -100,6 +100,30 @@ export default function RoadmapPage() {
   const completedWeeks = roadmap?.weeklyPlan.filter(w => w.completed).length || 0;
   const progressPercentage = roadmap ? (completedWeeks / roadmap.totalWeeks) * 100 : 0;
 
+  // Prepare data for charts
+  const completionData = [
+    { name: 'Start', score: 0 },
+    { name: 'Week 1', score: 10 },
+    { name: 'Week 2', score: 25 },
+    { name: 'Week 3', score: 40 },
+    { name: 'Week 4', score: 55 },
+    { name: 'Current', score: progressPercentage }
+  ];
+
+  const weeksDistributionData = roadmap ? [
+    { name: 'Completed', value: completedWeeks },
+    { name: 'Remaining', value: roadmap.totalWeeks - completedWeeks }
+  ] : [];
+
+  const hoursData = [
+    { name: 'Week 1', score: 5 },
+    { name: 'Week 2', score: 8 },
+    { name: 'Week 3', score: 12 },
+    { name: 'Week 4', score: 15 },
+    { name: 'Week 5', score: 10 },
+    { name: 'Target', score: hoursPerWeek }
+  ];
+
   return (
     <div className="">
 
@@ -157,39 +181,39 @@ export default function RoadmapPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl">
               {/* Progress Trend */}
-              <div className="dashboard-card p-6">
-                <MiniTrendChart
-                  data={[0, 10, 25, 40, 55, progressPercentage]}
-                  label="Completion Trend"
-                  value={`${Math.round(progressPercentage)}%`}
-                  trend={progressPercentage > 0 ? "+On Track" : "Start Now"}
-                  color="green"
-                  height={80}
+              <div className="dashboard-card p-6 bg-gray-900 border-none">
+                <h3 className="text-lg font-bold text-white mb-4">Completion Trend</h3>
+                <ReadinessAreaChart
+                  data={completionData}
+                  color="#7FFF00"
                 />
+                <div className="text-center mt-2">
+                  <span className="text-2xl font-bold text-white">{Math.round(progressPercentage)}%</span>
+                  <span className="text-xs text-gray-400 ml-2">{progressPercentage > 0 ? "+On Track" : "Start Now"}</span>
+                </div>
               </div>
 
               {/* Weeks Remaining Density */}
-              <div className="dashboard-card p-6">
-                <DotMatrix
-                  rows={4}
-                  cols={6}
-                  activeCount={(roadmap.totalWeeks - completedWeeks) * 4}
-                  label="Weeks Remaining"
-                  value={`${roadmap.totalWeeks - completedWeeks} Weeks`}
-                  color="orange"
-                />
+              <div className="dashboard-card p-6 bg-gray-900 border-none">
+                <h3 className="text-lg font-bold text-white mb-4">Weeks Progress</h3>
+                <SkillsDistributionChart data={weeksDistributionData} />
+                <div className="text-center mt-2">
+                  <span className="text-2xl font-bold text-white">{roadmap.totalWeeks - completedWeeks}</span>
+                  <span className="text-xs text-gray-400 ml-2">Weeks Remaining</span>
+                </div>
               </div>
 
               {/* Hours Balance */}
-              <div className="dashboard-card p-6">
-                <MiniTrendChart
-                  data={[5, 8, 12, 15, 10, hoursPerWeek]}
-                  label="Weekly Hours"
-                  value={`${hoursPerWeek}h`}
-                  trend="Target"
-                  color="white"
-                  height={80}
+              <div className="dashboard-card p-6 bg-gray-900 border-none">
+                <h3 className="text-lg font-bold text-white mb-4">Weekly Hours</h3>
+                <ReadinessAreaChart
+                  data={hoursData}
+                  color="#FFFFFF"
                 />
+                <div className="text-center mt-2">
+                  <span className="text-2xl font-bold text-white">{hoursPerWeek}h</span>
+                  <span className="text-xs text-gray-400 ml-2">Target</span>
+                </div>
               </div>
             </div>
 

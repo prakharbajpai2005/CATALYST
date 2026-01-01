@@ -10,8 +10,8 @@ import { useRouter } from 'next/navigation';
 
 import MetricCard from '@/components/ui/metric-card';
 import TimelineBar from '@/components/ui/timeline-bar';
-import DotMatrix from '@/components/ui/dot-matrix';
-import MiniTrendChart from '@/components/ui/mini-trend-chart';
+import ReadinessAreaChart from '@/components/ui/readiness-area-chart';
+import SkillsDistributionChart from '@/components/ui/skills-distribution-chart';
 
 interface SkillGap {
   skill: string;
@@ -97,6 +97,22 @@ export default function AnalyzePage() {
     return 'white';
   };
 
+  // Prepare data for charts
+  const readinessData = analysis ? [
+    { name: 'Week 1', score: 45 },
+    { name: 'Week 2', score: 52 },
+    { name: 'Week 3', score: 49 },
+    { name: 'Week 4', score: 60 },
+    { name: 'Week 5', score: 58 },
+    { name: 'Week 6', score: 65 },
+    { name: 'Current', score: analysis.hiringReadinessScore }
+  ] : [];
+
+  const gapDistributionData = analysis ? [
+    { name: 'Gaps', value: analysis.skillGaps.length },
+    { name: 'Matched', value: analysis.matchedSkills.length },
+  ] : [];
+
   return (
     <div className="">
 
@@ -155,45 +171,40 @@ export default function AnalyzePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl">
               {/* Readiness Trend - Line Chart Style */}
-              <div className="dashboard-card p-6">
-                <MiniTrendChart
-                  data={[45, 52, 49, 60, 58, 65, analysis.hiringReadinessScore]}
-                  label="Readiness Trend"
-                  value={`${analysis.hiringReadinessScore}%`}
-                  trend="+2.4% this week"
-                  color={analysis.hiringReadinessScore >= 70 ? 'green' : 'orange'}
-                  height={100}
+              <div className="dashboard-card p-6 bg-gray-900 border-none">
+                <h3 className="text-lg font-bold text-white mb-4">Readiness Trend</h3>
+                <ReadinessAreaChart
+                  data={readinessData}
+                  color={analysis.hiringReadinessScore >= 70 ? '#7FFF00' : '#FF8C00'}
                 />
+                <div className="text-center mt-2">
+                  <span className="text-2xl font-bold text-white">{analysis.hiringReadinessScore}%</span>
+                  <span className="text-xs text-gray-400 ml-2">+2.4% this week</span>
+                </div>
               </div>
 
               {/* Skill Gaps - Dot Matrix Style */}
-              <div className="dashboard-card p-6">
-                <DotMatrix
-                  rows={5}
-                  cols={8}
-                  activeCount={analysis.skillGaps.length * 2} // Visual representation
-                  label="Skill Gap Density"
-                  value={`${analysis.skillGaps.length} Gaps`}
-                  color="orange"
-                />
+              <div className="dashboard-card p-6 bg-gray-900 border-none">
+                <h3 className="text-lg font-bold text-white mb-4">Gap vs Match</h3>
+                <SkillsDistributionChart data={gapDistributionData} />
               </div>
 
               {/* Matched Skills - Bubble/Pill Style (simulated with DotMatrix for now or simple metrics) */}
-              <div className="dashboard-card p-6 flex flex-col justify-between">
+              <div className="dashboard-card p-6 flex flex-col justify-between bg-gray-900 border-none">
                 <div>
-                  <span className="!text-black text-sm font-medium">Matched Skills</span>
-                  <div className="text-2xl font-bold !text-black mt-1">{analysis.matchedSkills.length}</div>
+                  <span className="text-white text-sm font-medium">Matched Skills</span>
+                  <div className="text-2xl font-bold text-white mt-1">{analysis.matchedSkills.length}</div>
                 </div>
                 <div className="space-y-3 mt-4">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="!text-black">Technical</span>
+                    <span className="text-white">Technical</span>
                     <span className="text-[#FACC15]">High Match</span>
                   </div>
                   <div className="timeline-bar h-2 bg-[#2a2a2a]">
                     <div className="timeline-bar-fill green" style={{ width: '80%' }}></div>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="!text-black">Soft Skills</span>
+                    <span className="text-white">Soft Skills</span>
                     <span className="text-[#FF8C00]">Medium</span>
                   </div>
                   <div className="timeline-bar h-2 bg-[#2a2a2a]">

@@ -7,8 +7,9 @@ import { Upload, FileText, Loader2, CheckCircle2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import MetricCard from '@/components/ui/metric-card';
-import DotMatrix from '@/components/ui/dot-matrix';
-import MiniTrendChart from '@/components/ui/mini-trend-chart';
+import SkillsDonutChart from '@/components/ui/skills-donut-chart';
+import SkillsDistributionChart from '@/components/ui/skills-distribution-chart';
+import SkillsVerticalLollipopChart from '@/components/ui/skills-vertical-lollipop-chart';
 
 interface Skill {
   name: string;
@@ -97,15 +98,32 @@ export default function UploadPage() {
   const totalSkills = skills ?
     skills.technical.length + skills.soft.length + skills.tools.length : 0;
 
+  // Prepare data for charts
+  const donutData = skills?.soft.map(s => ({
+    name: s.name,
+    proficiency: s.proficiency,
+  })) || [];
+
+  const distributionData = skills ? [
+    { name: 'Technical', value: skills.technical.length },
+    { name: 'Soft', value: skills.soft.length },
+    { name: 'Tools', value: skills.tools.length },
+  ] : [];
+
+  const barData = skills?.technical.slice(0, 7).map(s => ({
+    name: s.name,
+    proficiency: s.proficiency
+  })) || [];
+
   return (
     <div className="">
 
       <div className="p-8 flex flex-col items-center justify-center mt-23">
         {/* Header */}
         <div className="mb-8">
-          <div className="text-sm !text-black mb-2">STEP 1 OF 3</div>
-          <h1 className="text-4xl font-bold !text-black mb-2">Upload Your Resume</h1>
-          <p className="!text-black">Let AI analyze your skills</p>
+          <div className="text-sm text-white mb-2">STEP 1 OF 3</div>
+          <h1 className="text-4xl font-bold text-white mb-2">Upload Your Resume</h1>
+          <p className="text-white">Let AI analyze your skills</p>
         </div>
 
         {/* Upload Section */}
@@ -177,64 +195,50 @@ export default function UploadPage() {
             </Card>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-6 w-full max-w-6xl">
             {/* Rich Metrics Dashboard */}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl">
-              {/* Total Skills Trend */}
-              <div className="dashboard-card p-6">
-                <MiniTrendChart
-                  data={[12, 15, 18, 20, 22, totalSkills]}
-                  label="Total Skills Extracted"
-                  value={totalSkills.toString()}
-                  trend="+2 new"
-                  color="white"
-                  height={80}
-                />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Skills Distribution */}
+              <div className="dashboard-card p-6 bg-gray-900 border-none">
+                <h3 className="text-lg font-bold text-white mb-4">Skills Distribution</h3>
+                <SkillsDistributionChart data={distributionData} />
+                <div className="text-center mt-2">
+                  <span className="text-3xl font-bold text-white">{totalSkills}</span>
+                  <span className="text-sm text-gray-400 ml-2">Total Skills</span>
+                </div>
               </div>
 
-              {/* Technical Skills Density */}
-              <div className="dashboard-card p-6">
-                <DotMatrix
-                  rows={4}
-                  cols={8}
-                  activeCount={skills.technical.length * 2}
-                  label="Technical Proficiency"
-                  value={skills.technical.length.toString()}
-                  color="green"
-                />
+              {/* Technical Proficiency */}
+              <div className="dashboard-card p-6 bg-gray-900 border-none">
+                <h3 className="text-lg font-bold text-white mb-4">Top Technical Skills</h3>
+                <SkillsVerticalLollipopChart data={barData} color="#FACC15" />
               </div>
 
-              {/* Soft Skills Density */}
-              <div className="dashboard-card p-6">
-                <DotMatrix
-                  rows={4}
-                  cols={8}
-                  activeCount={skills.soft.length * 2}
-                  label="Soft Skills Balance"
-                  value={skills.soft.length.toString()}
-                  color="orange"
-                />
+              {/* Soft Skills Balance */}
+              <div className="dashboard-card p-6 bg-gray-900 border-none">
+                <h3 className="text-lg font-bold text-white mb-4">Soft Skills Balance</h3>
+                <SkillsDonutChart data={donutData} />
               </div>
             </div>
 
 
             {/* Skills Grid */}
-            <div className="max-w-6xl space-y-6">
+            <div className="space-y-6">
               {/* Technical Skills */}
               {skills.technical.length > 0 && (
                 <div>
-                  <h3 className="text-xl font-bold !text-black mb-4">Technical Skills</h3>
+                  <h3 className="text-xl font-bold text-white mb-4">Technical Skills</h3>
                   <div className="grid grid-cols-3 gap-4">
                     {skills.technical.map((skill, idx) => (
-                      <div key={idx} className="dashboard-card p-4">
+                      <div key={idx} className="dashboard-card p-4 bg-gray-900 border-none">
                         <div className="flex items-start justify-between mb-2">
-                          <span className="font-semibold !text-black">{skill.name}</span>
+                          <span className="font-semibold text-white">{skill.name}</span>
                           <span className="text-xs px-2 py-1 rounded-full bg-[#FACC15]/20 text-[#FACC15]">
                             {skill.proficiency}/5
                           </span>
                         </div>
-                        <div className="text-xs !text-black line-clamp-2">
+                        <div className="text-xs text-white line-clamp-2">
                           {skill.evidence}
                         </div>
                       </div>
@@ -246,17 +250,17 @@ export default function UploadPage() {
               {/* Soft Skills */}
               {skills.soft.length > 0 && (
                 <div>
-                  <h3 className="text-xl font-bold !text-black mb-4">Soft Skills</h3>
+                  <h3 className="text-xl font-bold text-white mb-4">Soft Skills</h3>
                   <div className="grid grid-cols-3 gap-4">
                     {skills.soft.map((skill, idx) => (
-                      <div key={idx} className="dashboard-card p-4">
+                      <div key={idx} className="dashboard-card p-4 bg-gray-900 border-none">
                         <div className="flex items-start justify-between mb-2">
-                          <span className="font-semibold !text-black">{skill.name}</span>
+                          <span className="font-semibold text-white">{skill.name}</span>
                           <span className="text-xs px-2 py-1 rounded-full bg-[#FF8C00]/20 text-[#FF8C00]">
                             {skill.proficiency}/5
                           </span>
                         </div>
-                        <div className="text-xs !text-black line-clamp-2">
+                        <div className="text-xs text-white line-clamp-2">
                           {skill.evidence}
                         </div>
                       </div>
