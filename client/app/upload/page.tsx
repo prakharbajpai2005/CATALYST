@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { API_BASE_URL } from '@/lib/api';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Upload, FileText, Loader2, CheckCircle2 } from 'lucide-react';
@@ -74,7 +75,7 @@ export default function UploadPage() {
     formData.append('resume', file);
 
     try {
-      const response = await fetch('http://localhost:5000/api/resume/upload', {
+      const response = await fetch(`${API_BASE_URL}/resume/upload`, {
         method: 'POST',
         body: formData,
       });

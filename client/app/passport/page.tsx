@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { API_BASE_URL } from '@/lib/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -53,7 +54,7 @@ function PassportContent() {
     const loadPassport = async () => {
         if (!userId) return;
         try {
-            const res = await fetch(`http://localhost:5000/api/passport/${userId}`);
+            const res = await fetch(`${API_BASE_URL}/passport/${userId}`);
             const data = await res.json();
             setPassport(data);
         } catch (error) {

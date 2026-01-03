@@ -6,7 +6,15 @@ const cors = require('cors');
 const app = express();
 
 // Middleware
-app.use(cors());
+// Middleware
+app.use(cors({
+  origin: [
+    'https://catalyst.saurabh5532u.workers.dev',
+    'http://localhost:3000',
+    'http://localhost:5000'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // MongoDB Connection

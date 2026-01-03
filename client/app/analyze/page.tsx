@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { API_BASE_URL } from '@/lib/api';
 
 import MetricCard from '@/components/ui/metric-card';
 import TimelineBar from '@/components/ui/timeline-bar';
@@ -64,7 +65,7 @@ export default function AnalyzePage() {
     setAnalyzing(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/analyze/gap', {
+      const response = await fetch(`${API_BASE_URL}/analyze/gap`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

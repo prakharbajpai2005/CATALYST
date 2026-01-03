@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '@/lib/api';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -62,7 +63,7 @@ export default function RoadmapPage() {
     try {
       const analysis = JSON.parse(gapAnalysis);
 
-      const response = await fetch('http://localhost:5000/api/roadmap/generate', {
+      const response = await fetch(`${API_BASE_URL}/roadmap/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
