@@ -21,8 +21,6 @@ const upload = multer({
   }
 });
 
-
-
 // Extract text from PDF
 async function extractTextFromPDF(buffer) {
   try {

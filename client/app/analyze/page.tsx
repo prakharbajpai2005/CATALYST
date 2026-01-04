@@ -120,38 +120,38 @@ export default function AnalyzePage() {
       <div className="p-8 flex flex-col items-center w-full">
         {/* Header */}
         <div className="mb-8 mt-15 flex flex-col items-center justify-center">
-          <div className="text-sm !text-black mb-2">STEP 2 OF 3</div>
-          <h1 className="text-4xl font-bold !text-black mb-2">Skill Gap Analysis</h1>
-          <p className="!text-black">Compare your skills with your target role</p>
+          <div className="text-sm text-white mb-2">STEP 2 OF 3</div>
+          <h1 className="text-4xl font-bold text-white mb-2">Skill Gap Analysis</h1>
+          <p className="text-white">Compare your skills with your target role</p>
         </div>
 
         {!analysis ? (
           <div className="max-w-2xl space-y-6">
             {/* Input Form */}
-            <Card className="dashboard-card w-100 p-6 space-y-4">
+            <Card className="dashboard-card bg-zinc-900 w-100 p-6 space-y-4">
               <div>
-                <label className="text-sm  mb-2 !text-black  block">Target Role</label>
+                <label className="text-sm  mb-2 text-white  block">Target Role</label>
                 <Input
                   placeholder="e.g., Full Stack Developer"
                   value={targetRole}
                   onChange={(e) => setTargetRole(e.target.value)}
-                  className="bg-black border-[#2a2a2a] !text-black"
+                  className="bg-black border-[#2a2a2a] !text-white"
                 />
               </div>
 
               <div>
-                <label className="text-sm  mb-2 !text-black block">Job Description</label>
+                <label className="text-sm  mb-2 !text-white block">Job Description</label>
                 <Textarea
                   placeholder="Paste the complete job description here..."
                   rows={12}
                   value={jobDescription}
                   onChange={(e) => setJobDescription(e.target.value)}
-                  className="bg-black border-[#2a2a2a] !text-black font-mono text-sm"
+                  className="bg-black border-[#2a2a2a] text-white font-mono text-sm"
                 />
               </div>
 
               <Button
-                className="pill-button bg-yellow-400 !text-black hover:bg-[#6FEF00] w-full"
+                className="pill-button bg-yellow-400 text-white hover:bg-[#6FEF00] w-full"
                 onClick={handleAnalyze}
                 disabled={analyzing}
               >
