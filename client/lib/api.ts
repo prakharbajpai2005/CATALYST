@@ -1,4 +1,4 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? 'https://ai-nterview-backend.onrender.com/api' : 'http://localhost:5000/api');
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? 'https://catalyst-five-flax.vercel.app/api' : 'http://localhost:5000/api');
 
 export const api = {
     // User endpoints
