@@ -32,7 +32,7 @@ router.post('/gap', async (req, res) => {
       7 * 24 * 60 * 60, // Cache for 7 days
       async () => {
         const model = genAI.getGenerativeModel({ 
-          model: 'gemini-2.5-flash'
+          model: 'gemini-1.5-flash'
         });
 
         const prompt = `You are a career gap analyzer. Compare the candidate's current skills against a job description.
