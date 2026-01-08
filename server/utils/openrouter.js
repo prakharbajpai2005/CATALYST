@@ -46,7 +46,7 @@ async function generateContent(prompt, model = 'openai/gpt-3.5-turbo') {
         }
       ],
       temperature: 0.7,
-      max_tokens: 4000,
+      max_tokens: 2000,
     });
 
     return completion.choices[0].message.content;
