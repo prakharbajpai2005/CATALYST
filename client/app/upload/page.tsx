@@ -75,18 +75,21 @@ export default function UploadPage() {
     formData.append('resume', file);
 
     try {
+      console.log('Uploading to:', `${API_BASE_URL}/resume/upload`);
       const response = await fetch(`${API_BASE_URL}/resume/upload`, {
         method: 'POST',
         body: formData,
       });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (response.ok) {
         setSkills(data.skills);
         localStorage.setItem('extracted_skills', JSON.stringify(data.skills));
       } else {
-        alert(data.error || 'Failed to upload resume');
+        alert(data.error || `Upload failed: ${response.status}`);
       }
     } catch (error) {
       console.error('Upload error:', error);
