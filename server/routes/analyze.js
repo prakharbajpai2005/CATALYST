@@ -29,7 +29,6 @@ router.post('/gap', async (req, res) => {
       cacheKey,
       7 * 24 * 60 * 60, // Cache for 7 days
       async () => {
-      async () => {
         const prompt = `You are a career gap analyzer. Compare the candidate's current skills against a job description.
 
 CURRENT SKILLS:

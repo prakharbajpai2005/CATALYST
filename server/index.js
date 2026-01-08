@@ -33,7 +33,7 @@ const passportRoutes = require('./routes/passport');
 const resumeRoutes = require('./routes/resume');
 const analyzeRoutes = require('./routes/analyze');
 const roadmapRoutes = require('./routes/roadmap');
-const roadmapRoutes = require('./routes/roadmap');
+
 const testOpenRouterRoutes = require('./routes/test-openrouter');
 
 app.use('/api/simulation', simulationRoutes);
