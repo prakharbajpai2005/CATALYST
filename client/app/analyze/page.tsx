@@ -167,10 +167,10 @@ export default function AnalyzePage() {
             </Card>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-6 w-full">
             {/* Rich Metrics Dashboard */}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-7xl mx-auto px-4">
               {/* Readiness Trend - Line Chart Style */}
               <div className="dashboard-card p-6 bg-gray-900 border-none">
                 <h3 className="text-lg font-bold text-white mb-4">Readiness Trend</h3>
@@ -220,7 +220,7 @@ export default function AnalyzePage() {
 
 
             {/* Skill Gaps */}
-            <div className="max-w-6xl">
+            <div className="max-w-7xl mx-auto w-full px-4">
               <h3 className="text-xl font-bold text-white mb-4">Skill Gaps to Address</h3>
               <Card className="dashboard-card bg-gray-800 border-none p-6 space-y-4">
                 {analysis.skillGaps.map((gap, idx) => {
@@ -259,7 +259,7 @@ export default function AnalyzePage() {
 
             {/* Strengths */}
             {analysis.matchedSkills.length > 0 && (
-              <div className="max-w-6xl">
+              <div className="max-w-7xl mx-auto w-full px-4">
                 <h3 className="text-xl font-bold text-white mb-4">Your Strengths</h3>
                 <div className="grid grid-cols-3 gap-4">
                   {analysis.matchedSkills.map((skill, idx) => (

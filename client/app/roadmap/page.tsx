@@ -173,10 +173,10 @@ export default function RoadmapPage() {
             </Card>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-6 w-full">
             {/* Rich Metrics Dashboard */}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-[30vw]">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-7xl mx-auto px-4">
               {/* Progress Trend */}
               <div className="dashboard-card p-6 bg-gray-900 border border-gray-800">
                 <h3 className="text-lg font-bold text-white mb-4">Completion Trend</h3>
@@ -222,7 +222,7 @@ export default function RoadmapPage() {
 
 
             {/* Timeline View */}
-            <div className="max-w-6xl">
+            <div className="max-w-7xl mx-auto w-full px-4">
               <h3 className="text-xl font-bold !text-white mb-4">Timeline</h3>
               <Card className="dashboard-card bg-gray-800 border-none p-6 space-y-4">
                 {roadmap.weeklyPlan.map((week, idx) => {
