@@ -165,7 +165,7 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
 
                         {/* Resources */}
                         <div>
-                          <h4 className="text-sm font-semibold text-black mb-2">Learning Resources</h4>
+                          <h4 className="text-sm font-semibold text-white mb-2">Learning Resources</h4>
                           <div className="space-y-2">
                             {week.resources.map((resource, idx) => (
                               <motion.a
@@ -179,8 +179,8 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
                                 whileHover={{ x: 4 }}
                                 className="
                                   flex items-center gap-3 p-3 rounded-lg
-                                  bg-white/5 hover:bg-white/10
-                                  border border-white/10 hover:border-indigo-500/50
+                                  bg-zinc-500/20 hover:bg-zinc-500/30
+                                  border border-zinc-500/20 hover:border-zinc-500/30
                                   transition-all group
                                 "
                               >
@@ -188,14 +188,14 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
                                   {getResourceIcon(resource.type)}
                                 </span>
                                 <div className="flex-1">
-                                  <div className="text-sm font-medium text-black group-hover:text-indigo-300 transition-colors">
+                                  <div className="text-sm font-medium text-white group-hover:text-indigo-300 transition-colors">
                                     {resource.title}
                                   </div>
-                                  <div className="text-xs text-black">
+                                  <div className="text-xs text-white">
                                     {resource.type} {resource.duration && `• ${resource.duration}`}
                                   </div>
                                 </div>
-                                <span className="text-black group-hover:text-indigo-400 transition-colors">
+                                <span className="text-white group-hover:text-indigo-400 transition-colors">
                                   →
                                 </span>
                               </motion.a>
@@ -206,7 +206,7 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
                         {/* Milestones */}
                         {week.milestones.length > 0 && (
                           <div>
-                            <h4 className="text-sm font-semibold text-black mb-2">Milestones</h4>
+                            <h4 className="text-sm font-semibold text-white mb-2">Milestones</h4>
                             <div className="space-y-2">
                               {week.milestones.map((milestone, idx) => (
                                 <motion.div
@@ -214,7 +214,7 @@ export default function AnimatedRoadmap({ weeks, onWeekComplete }: AnimatedRoadm
                                   initial={{ x: -10, opacity: 0 }}
                                   animate={{ x: 0, opacity: 1 }}
                                   transition={{ delay: idx * 0.05 }}
-                                  className="flex items-center gap-2 text-sm text-black"
+                                  className="flex items-center gap-2 text-sm text-white"
                                 >
                                   <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
                                   {milestone}

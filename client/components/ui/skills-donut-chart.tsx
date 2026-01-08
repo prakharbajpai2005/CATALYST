@@ -20,8 +20,8 @@ export default function SkillsDonutChart({ data }: SkillsDonutChartProps) {
     if (!data || data.length === 0) {
         return (
             <div className="w-full h-[300px] flex flex-col items-center justify-center text-center">
-                <span className="text-8xl font-bold text-white mb-2">0</span>
-                <span className="text-4xl text-white">Soft Skills Detected</span>
+                <span className="text-8xl font-bold !text-white mb-2">0</span>
+                <span className="text-4xl !text-white">Soft Skills Detected</span>
             </div>
         );
     }
@@ -53,11 +53,11 @@ export default function SkillsDonutChart({ data }: SkillsDonutChartProps) {
                     </Pie>
                     <Tooltip
                         contentStyle={{
-                            backgroundColor: '#111827',
-                            border: 'none',
+                            backgroundColor: 'white',
+                            border: '1px solid #e5e7eb',
                             borderRadius: '8px',
-                            color: 'white',
-                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)'
+                            color: 'black',
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                         }}
                         itemStyle={{ color: '#FACC15' }}
                     />

@@ -104,10 +104,6 @@ export default function RoadmapPage() {
   // Prepare data for charts
   const completionData = [
     { name: 'Start', score: 0 },
-    { name: 'Week 1', score: 10 },
-    { name: 'Week 2', score: 25 },
-    { name: 'Week 3', score: 40 },
-    { name: 'Week 4', score: 55 },
     { name: 'Current', score: progressPercentage }
   ];
 
@@ -128,19 +124,19 @@ export default function RoadmapPage() {
   return (
     <div className="">
 
-      <div className="p-8 flex flex-col items-center w-full">
+      <div className="p-4 flex flex-col items-center w-full">
         {/* Header */}
         <div className="mb-8 flex flex-col items-center justify-center w-full pt-20">
-          <div className="text-sm !text-black mb-2">STEP 3 OF 3</div>
-          <h1 className="text-4xl font-bold !text-black mb-2">Learning Roadmap</h1>
-          <p className="!text-black">Your personalized week-by-week plan</p>
+          <div className="text-sm text-white mb-2">STEP 3 OF 3</div>
+          <h1 className="text-4xl font-bold text-white mb-2">Learning Roadmap</h1>
+          <p className="text-white">Your personalized week-by-week plan</p>
         </div>
 
         {!roadmap ? (
           <div className="max-w-2xl">
-            <Card className="dashboard-card p-8 space-y-6">
+            <Card className="dashboard-card bg-gray-800 border-none p-8 space-y-6">
               <div>
-                <label className="text-sm !text-black mb-4 block">
+                <label className="text-lg !text-white mb-4 block">
                   Available Hours Per Week
                 </label>
                 <div className="flex items-center gap-4">
@@ -152,7 +148,7 @@ export default function RoadmapPage() {
                     onChange={(e) => setHoursPerWeek(Number(e.target.value))}
                     className="bg-black border-[#2a2a2a] text-white text-3xl text-center w-32"
                   />
-                  <span className="!text-black">hours/week</span>
+                  <span className="text-white">hours/week</span>
                 </div>
               </div>
 
@@ -180,13 +176,14 @@ export default function RoadmapPage() {
           <div className="space-y-6">
             {/* Rich Metrics Dashboard */}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-[30vw]">
               {/* Progress Trend */}
-              <div className="dashboard-card p-6 bg-gray-900 border-none">
+              <div className="dashboard-card p-6 bg-gray-900 border border-gray-800">
                 <h3 className="text-lg font-bold text-white mb-4">Completion Trend</h3>
                 <ReadinessAreaChart
                   data={completionData}
                   color="#7FFF00"
+                  className="h-[200px]"
                 />
                 <div className="text-center mt-2">
                   <span className="text-2xl font-bold text-white">{Math.round(progressPercentage)}%</span>
@@ -195,9 +192,13 @@ export default function RoadmapPage() {
               </div>
 
               {/* Weeks Remaining Density */}
-              <div className="dashboard-card p-6 bg-gray-900 border-none">
+              <div className="dashboard-card p-6 bg-gray-900 border border-gray-800">
                 <h3 className="text-lg font-bold text-white mb-4">Weeks Progress</h3>
-                <SkillsDistributionChart data={weeksDistributionData} />
+                <SkillsDistributionChart
+                  data={weeksDistributionData}
+                  colors={['#22C55E', '#374151']}
+                  className="h-[250px]"
+                />
                 <div className="text-center mt-2">
                   <span className="text-2xl font-bold text-white">{roadmap.totalWeeks - completedWeeks}</span>
                   <span className="text-xs text-gray-400 ml-2">Weeks Remaining</span>
@@ -205,11 +206,12 @@ export default function RoadmapPage() {
               </div>
 
               {/* Hours Balance */}
-              <div className="dashboard-card p-6 bg-gray-900 border-none">
+              <div className="dashboard-card p-6 bg-gray-900 border border-gray-800">
                 <h3 className="text-lg font-bold text-white mb-4">Weekly Hours</h3>
                 <ReadinessAreaChart
                   data={hoursData}
                   color="#FFFFFF"
+                  className="h-[200px]"
                 />
                 <div className="text-center mt-2">
                   <span className="text-2xl font-bold text-white">{hoursPerWeek}h</span>
@@ -221,8 +223,8 @@ export default function RoadmapPage() {
 
             {/* Timeline View */}
             <div className="max-w-6xl">
-              <h3 className="text-xl font-bold !text-black mb-4">Timeline</h3>
-              <Card className="dashboard-card p-6 space-y-4">
+              <h3 className="text-xl font-bold !text-white mb-4">Timeline</h3>
+              <Card className="dashboard-card bg-gray-800 border-none p-6 space-y-4">
                 {roadmap.weeklyPlan.map((week, idx) => {
                   const percentage = week.completed ? 100 : idx === 0 ? 50 : 0;
                   const color = week.completed ? 'green' : idx === 0 ? 'orange' : 'white';
@@ -238,16 +240,16 @@ export default function RoadmapPage() {
                             {week.completed ? (
                               <CheckCircle2 className="w-6 h-6 text-[#FACC15]" />
                             ) : (
-                              <Circle className="w-6 h-6 !text-black" />
+                              <Circle className="w-6 h-6 !text-white" />
                             )}
                           </button>
-                          <span className="font-semibold !text-black">
+                          <span className="font-semibold !text-white">
                             Week {week.week}: {week.title}
                           </span>
                         </div>
                         <button
                           onClick={() => setExpandedWeek(expandedWeek === idx ? null : idx)}
-                          className="!text-black hover:!text-black transition-colors"
+                          className="!text-white hover:!text-white transition-colors"
                         >
                           {expandedWeek === idx ? (
                             <ChevronUp className="w-5 h-5" />
@@ -261,6 +263,7 @@ export default function RoadmapPage() {
                         percentage={percentage}
                         color={color}
                         showPercentage={week.completed}
+                        textColor="text-white"
                       />
 
                       {/* Expanded Details */}
@@ -268,7 +271,7 @@ export default function RoadmapPage() {
                         <div className="mt-4 pl-9 space-y-4">
                           {/* Resources */}
                           <div>
-                            <h4 className="text-sm font-semibold !text-black mb-2">
+                            <h4 className="text-sm font-semibold !text-white mb-2">
                               📚 Learning Resources
                             </h4>
                             <div className="space-y-2">
@@ -278,17 +281,17 @@ export default function RoadmapPage() {
                                   href={resource.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="flex items-center justify-between p-3 bg-black rounded-lg border border-[#2a2a2a] hover:border-[#7FFF00] transition-all group"
+                                  className="flex items-center justify-between p-3 bg-zinc-800 rounded-lg border border-[#2a2a2a] hover:border-[#7FFF00] transition-all group"
                                 >
                                   <div>
-                                    <div className="text-sm font-medium !text-black group-hover:text-[#FACC15]">
+                                    <div className="text-sm font-medium !text-white group-hover:text-[#FACC15]">
                                       {resource.title}
                                     </div>
-                                    <div className="text-xs !text-black">
+                                    <div className="text-xs !text-white">
                                       {resource.type} • {resource.duration}
                                     </div>
                                   </div>
-                                  <ExternalLink className="w-4 h-4 !text-black group-hover:text-[#FACC15]" />
+                                  <ExternalLink className="w-4 h-4 !text-white group-hover:text-[#FACC15]" />
                                 </a>
                               ))}
                             </div>
@@ -296,10 +299,10 @@ export default function RoadmapPage() {
 
                           {/* Practice Project */}
                           <div>
-                            <h4 className="text-sm font-semibold !text-black mb-2">
+                            <h4 className="text-sm font-semibold !text-white mb-2">
                               🛠️ Practice Project
                             </h4>
-                            <div className="p-3 bg-[#FF8C00]/10 border border-[#FF8C00]/30 rounded-lg text-sm !text-black">
+                            <div className="p-3 bg-zinc-800 border border-[#2a2a2a] rounded-lg text-sm !text-white">
                               {week.practiceProject}
                             </div>
                           </div>
@@ -307,12 +310,12 @@ export default function RoadmapPage() {
                           {/* Milestones */}
                           {week.milestones && week.milestones.length > 0 && (
                             <div>
-                              <h4 className="text-sm font-semibold !text-black mb-2">
+                              <h4 className="text-sm font-semibold !text-white mb-2">
                                 🎯 Milestones
                               </h4>
                               <ul className="space-y-1">
                                 {week.milestones.map((milestone: string, mIdx: number) => (
-                                  <li key={mIdx} className="text-sm !text-black flex items-center gap-2">
+                                  <li key={mIdx} className="text-sm !text-white flex items-center gap-2">
                                     <span className="text-[#FACC15]">✓</span>
                                     {milestone}
                                   </li>
@@ -340,7 +343,7 @@ export default function RoadmapPage() {
                 Generate New Roadmap
               </Button>
               <Button
-                className="pill-button bg-black !text-black border border-[#2a2a2a] hover:bg-[#1a1a1a]"
+                className="pill-button bg-yellow-400 !text-white  hover:bg-[#1a1a1a]"
                 onClick={() => router.push('/upload')}
               >
                 Start Over with New Resume

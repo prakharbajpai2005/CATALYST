@@ -94,13 +94,13 @@ export default function SkillsVerticalLollipopChart({ data, color = '#FACC15' }:
                         hide
                     />
                     <Tooltip
-                        cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                        cursor={{ fill: 'rgba(0,0,0,0.05)' }}
                         contentStyle={{
-                            backgroundColor: '#111827',
-                            border: 'none',
+                            backgroundColor: 'white',
+                            border: '1px solid #e5e7eb',
                             borderRadius: '8px',
-                            color: 'white',
-                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)'
+                            color: 'black',
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                         }}
                     />
                     <Bar

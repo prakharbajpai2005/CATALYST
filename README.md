@@ -14,9 +14,17 @@ An AI-powered career transformation platform that analyzes your resume, compares
 - **Skill Heatmap**: Visual categorization (Technical, Tools, Soft Skills)
 - **Proficiency Levels**: 1-5 rating with evidence from resume
 
+### ✅ Phase 2: Gap Analysis (IMPLEMENTED)
+- **Role Comparison**: Compare resume against target job roles
+- **Visual Gaps**: Interactive charts showing skill matches vs gaps
+- **Readiness Score**: AI-calculated readiness percentage
+
+### ✅ Phase 3: Dynamic Roadmap (IMPLEMENTED)
+- **Personalized Plan**: Week-by-week learning path
+- **Resource Aggregation**: Curated tutorials and documentation
+- **Progress Tracking**: Interactive timeline with completion tracking
+
 ### 🚧 Coming Next
-- **Phase 2**: Gap Analysis (compare resume vs job description)
-- **Phase 3**: Dynamic Roadmap Generation
 - **Phase 4**: On-Demand Micro-Tutorials
 - **Phase 5**: Hiring Readiness Score
 
@@ -98,10 +106,15 @@ Navigate to: **http://localhost:3000**
 - Check proficiency levels (Beginner → Expert)
 - Review evidence quotes from your resume
 
-### Step 3: Next Steps (Coming Soon)
-- Paste a job description
-- Get gap analysis
-- Generate personalized roadmap
+### Step 3: Gap Analysis
+- Enter your target job role (e.g., "Full Stack Developer")
+- View detailed breakdown of missing skills
+- See your readiness score for the role
+
+### Step 4: Generate Roadmap
+- Input your available hours per week
+- Get a personalized weekly learning plan
+- Track your progress week by week
 
 ---
 
@@ -110,6 +123,8 @@ Navigate to: **http://localhost:3000**
 ### Frontend
 - **Framework**: Next.js 15 (App Router)
 - **Styling**: Tailwind CSS + Shadcn UI
+- **Visualization**: Recharts
+- **Animations**: Framer Motion
 - **Icons**: Lucide React
 - **Language**: TypeScript
 
@@ -131,8 +146,8 @@ CATALYST/
 ├── client/                 # Next.js frontend
 │   ├── app/
 │   │   ├── upload/        # Resume upload page
-│   │   ├── analyze/       # Gap analysis (coming soon)
-│   │   ├── roadmap/       # Learning path (coming soon)
+│   │   ├── analyze/       # Gap analysis & role comparison
+│   │   ├── roadmap/       # Personalized learning path
 │   │   └── dashboard/     # Old simulation (deprecated)
 │   ├── components/
 │   └── lib/
@@ -205,8 +220,8 @@ Response: {
 | Resume Upload | ✅ Done |
 | Skill Extraction | ✅ Done |
 | Skill Categorization | ✅ Done |
-| Gap Analysis | 🚧 In Progress |
-| Roadmap Generation | ⏳ Planned |
+| Gap Analysis | ✅ Done |
+| Roadmap Generation | ✅ Done |
 | Micro-Tutorials | ⏳ Planned |
 | Hiring Readiness Score | ⏳ Planned |
 

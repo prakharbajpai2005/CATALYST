@@ -4,6 +4,7 @@ interface TimelineBarProps {
   label?: string;
   avatars?: string[];
   showPercentage?: boolean;
+  textColor?: string;
 }
 
 export default function TimelineBar({
@@ -11,15 +12,16 @@ export default function TimelineBar({
   color = 'green',
   label,
   avatars,
-  showPercentage = false
+  showPercentage = false,
+  textColor = 'text-black'
 }: TimelineBarProps) {
   return (
     <div className="space-y-2">
       {label && (
         <div className="flex items-center justify-between text-sm">
-          <span className="text-black">{label}</span>
+          <span className={textColor}>{label}</span>
           {showPercentage && (
-            <span className="text-black font-medium">{percentage}%</span>
+            <span className={`${textColor} font-medium`}>{percentage}%</span>
           )}
         </div>
       )}

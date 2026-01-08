@@ -130,7 +130,7 @@ export default function UploadPage() {
         {/* Upload Section */}
         {!skills ? (
           <div className="max-w-2xl">
-            <Card className="dashboard-card p-8 w-150">
+            <Card className="dashboard-card bg-gray-800 border-none p-8 w-150">
               <div
                 className={`
                   border-2 border-dashed rounded-2xl p-12 text-center transition-all
@@ -145,13 +145,13 @@ export default function UploadPage() {
                 onDrop={handleDrop}
               >
                 <Upload className="w-16 h-16 mx-auto mb-4 !text-black" />
-                <h3 className="text-xl font-semibold !text-black mb-2">
+                <h3 className="text-xl font-semibold text-white mb-2">
                   {file ? file.name : 'Drag and drop your resume here'}
                 </h3>
-                <p className="!text-black mb-4">
+                <p className="!text-white mb-4">
                   {file ? `${(file.size / 1024).toFixed(2)} KB` : 'or click to browse'}
                 </p>
-                <p className="text-xs !text-black mb-6">Supports PDF and DOCX</p>
+                <p className="text-xs text-white mb-6">Supports PDF and DOCX</p>
 
                 <input
                   type="file"
@@ -163,7 +163,7 @@ export default function UploadPage() {
 
                 <label htmlFor="file-upload">
                   <Button
-                    className="pill-button bg-white !text-black hover:bg-gray-200"
+                    className="pill-button bg-yellow-300 border-none !text-black hover:bg-gray-200"
                     onClick={() => document.getElementById('file-upload')?.click()}
                   >
                     <FileText className="w-4 h-4 mr-2" />
@@ -201,24 +201,24 @@ export default function UploadPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Skills Distribution */}
-              <div className="dashboard-card p-6 bg-gray-900 border-none">
-                <h3 className="text-lg font-bold text-white mb-4">Skills Distribution</h3>
+              <div className="dashboard-card p-6 border-none bg-gray-800">
+                <h3 className="text-lg font-bold !text-white mb-4">Skills Distribution</h3>
                 <SkillsDistributionChart data={distributionData} />
                 <div className="text-center mt-2">
-                  <span className="text-3xl font-bold text-white">{totalSkills}</span>
-                  <span className="text-sm text-gray-400 ml-2">Total Skills</span>
+                  <span className="text-3xl font-bold !text-white">{totalSkills}</span>
+                  <span className="text-sm text-white ml-2">Total Skills</span>
                 </div>
               </div>
 
               {/* Technical Proficiency */}
-              <div className="dashboard-card p-6 bg-gray-900 border-none">
-                <h3 className="text-lg font-bold text-white mb-4">Top Technical Skills</h3>
+              <div className="dashboard-card p-6 border-none bg-gray-800">
+                <h3 className="text-lg font-bold !text-white mb-4">Top Technical Skills</h3>
                 <SkillsVerticalLollipopChart data={barData} color="#FACC15" />
               </div>
 
               {/* Soft Skills Balance */}
-              <div className="dashboard-card p-6 bg-gray-900 border-none">
-                <h3 className="text-lg font-bold text-white mb-4">Soft Skills Balance</h3>
+              <div className="dashboard-card p-6 border-none bg-gray-800">
+                <h3 className="text-lg font-bold !text-white mb-4">Soft Skills Balance</h3>
                 <SkillsDonutChart data={donutData} />
               </div>
             </div>
@@ -232,14 +232,14 @@ export default function UploadPage() {
                   <h3 className="text-xl font-bold text-white mb-4">Technical Skills</h3>
                   <div className="grid grid-cols-3 gap-4">
                     {skills.technical.map((skill, idx) => (
-                      <div key={idx} className="dashboard-card p-4 bg-gray-900 border-none">
+                      <div key={idx} className="dashboard-card bg-gray-800 p-4 border-none">
                         <div className="flex items-start justify-between mb-2">
-                          <span className="font-semibold text-white">{skill.name}</span>
+                          <span className="font-semibold !text-white">{skill.name}</span>
                           <span className="text-xs px-2 py-1 rounded-full bg-[#FACC15]/20 text-[#FACC15]">
                             {skill.proficiency}/5
                           </span>
                         </div>
-                        <div className="text-xs text-white line-clamp-2">
+                        <div className="text-xs !text-white line-clamp-2">
                           {skill.evidence}
                         </div>
                       </div>
@@ -251,17 +251,17 @@ export default function UploadPage() {
               {/* Soft Skills */}
               {skills.soft.length > 0 && (
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-4">Soft Skills</h3>
+                  <h3 className="text-xl font-bold !text-white mb-4">Soft Skills</h3>
                   <div className="grid grid-cols-3 gap-4">
                     {skills.soft.map((skill, idx) => (
-                      <div key={idx} className="dashboard-card p-4 bg-gray-900 border-none">
+                      <div key={idx} className="dashboard-card bg-gray-800 p-4 border-none">
                         <div className="flex items-start justify-between mb-2">
-                          <span className="font-semibold text-white">{skill.name}</span>
+                          <span className="font-semibold !text-white">{skill.name}</span>
                           <span className="text-xs px-2 py-1 rounded-full bg-[#FF8C00]/20 text-[#FF8C00]">
                             {skill.proficiency}/5
                           </span>
                         </div>
-                        <div className="text-xs text-white line-clamp-2">
+                        <div className="text-xs !text-white line-clamp-2">
                           {skill.evidence}
                         </div>
                       </div>
@@ -273,17 +273,17 @@ export default function UploadPage() {
               {/* Tools */}
               {skills.tools.length > 0 && (
                 <div>
-                  <h3 className="text-xl font-bold !text-black mb-4">Tools & Technologies</h3>
+                  <h3 className="text-xl font-bold !text-white mb-4">Tools & Technologies</h3>
                   <div className="grid grid-cols-3 gap-4">
                     {skills.tools.map((skill, idx) => (
-                      <div key={idx} className="dashboard-card p-4">
+                      <div key={idx} className="dashboard-card bg-gray-800 p-4 border-none">
                         <div className="flex items-start justify-between mb-2">
-                          <span className="font-semibold !text-black">{skill.name}</span>
-                          <span className="text-xs px-2 py-1 rounded-full bg-white/20 !text-black">
+                          <span className="font-semibold !text-white">{skill.name}</span>
+                          <span className="text-xs px-2 py-1 rounded-full bg-[#FF8C00]/20 text-[#FF8C00]">
                             {skill.proficiency}/5
                           </span>
                         </div>
-                        <div className="text-xs !text-black line-clamp-2">
+                        <div className="text-xs !text-white line-clamp-2">
                           {skill.evidence}
                         </div>
                       </div>

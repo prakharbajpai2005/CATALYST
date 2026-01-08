@@ -18,18 +18,19 @@ interface ReadinessData {
 interface ReadinessAreaChartProps {
     data: ReadinessData[];
     color?: string;
+    className?: string;
 }
 
-export default function ReadinessAreaChart({ data, color = '#FACC15' }: ReadinessAreaChartProps) {
+export default function ReadinessAreaChart({ data, color = '#FACC15', className }: ReadinessAreaChartProps) {
     return (
-        <div className="w-full h-[100px]">
+        <div className={`w-full ${className || 'h-[100px]'}`}>
             <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
                     data={data}
                     margin={{
-                        top: 5,
-                        right: 0,
-                        left: 0,
+                        top: 10,
+                        right: 10,
+                        left: 10,
                         bottom: 0,
                     }}
                 >
@@ -39,6 +40,7 @@ export default function ReadinessAreaChart({ data, color = '#FACC15' }: Readines
                             <stop offset="95%" stopColor={color} stopOpacity={0} />
                         </linearGradient>
                     </defs>
+                    <YAxis domain={[0, 100]} hide />
                     <Tooltip
                         contentStyle={{
                             backgroundColor: '#1a1a1a',

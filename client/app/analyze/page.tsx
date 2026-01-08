@@ -128,7 +128,7 @@ export default function AnalyzePage() {
         {!analysis ? (
           <div className="max-w-2xl space-y-6">
             {/* Input Form */}
-            <Card className="dashboard-card bg-zinc-900 w-100 p-6 space-y-4">
+            <Card className="dashboard-card w-100 p-6 bg-zinc-800 space-y-4 border-none">
               <div>
                 <label className="text-sm  mb-2 text-white  block">Target Role</label>
                 <Input
@@ -140,18 +140,18 @@ export default function AnalyzePage() {
               </div>
 
               <div>
-                <label className="text-sm  mb-2 !text-white block">Job Description</label>
+                <label className="text-sm  mb-2 text-white block">Job Description</label>
                 <Textarea
                   placeholder="Paste the complete job description here..."
                   rows={12}
                   value={jobDescription}
                   onChange={(e) => setJobDescription(e.target.value)}
-                  className="bg-black border-[#2a2a2a] text-white font-mono text-sm"
+                  className="bg-black border-[#2a2a2a] !text-white font-mono text-sm"
                 />
               </div>
 
               <Button
-                className="pill-button bg-yellow-400 text-white hover:bg-[#6FEF00] w-full"
+                className="pill-button bg-yellow-400 !text-black hover:bg-[#6FEF00] w-full"
                 onClick={handleAnalyze}
                 disabled={analyzing}
               >
@@ -170,7 +170,7 @@ export default function AnalyzePage() {
           <div className="space-y-6">
             {/* Rich Metrics Dashboard */}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl">
               {/* Readiness Trend - Line Chart Style */}
               <div className="dashboard-card p-6 bg-gray-900 border-none">
                 <h3 className="text-lg font-bold text-white mb-4">Readiness Trend</h3>
@@ -187,30 +187,33 @@ export default function AnalyzePage() {
               {/* Skill Gaps - Dot Matrix Style */}
               <div className="dashboard-card p-6 bg-gray-900 border-none">
                 <h3 className="text-lg font-bold text-white mb-4">Gap vs Match</h3>
-                <SkillsDistributionChart data={gapDistributionData} />
+                <SkillsDistributionChart
+                  data={gapDistributionData}
+                  colors={['#EF4444', '#22C55E']}
+                />
               </div>
 
-              {/* Matched Skills - Bubble/Pill Style (simulated with DotMatrix for now or simple metrics) */}
+              {/* Matched Skills - Breakdown */}
               <div className="dashboard-card p-6 flex flex-col justify-between bg-gray-900 border-none">
                 <div>
                   <span className="text-white text-sm font-medium">Matched Skills</span>
                   <div className="text-2xl font-bold text-white mt-1">{analysis.matchedSkills.length}</div>
                 </div>
-                <div className="space-y-3 mt-4">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-white">Technical</span>
-                    <span className="text-[#FACC15]">High Match</span>
-                  </div>
-                  <div className="timeline-bar h-2 bg-[#2a2a2a]">
-                    <div className="timeline-bar-fill green" style={{ width: '80%' }}></div>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-white">Soft Skills</span>
-                    <span className="text-[#FF8C00]">Medium</span>
-                  </div>
-                  <div className="timeline-bar h-2 bg-[#2a2a2a]">
-                    <div className="timeline-bar-fill orange" style={{ width: '60%' }}></div>
-                  </div>
+                <div className="space-y-6 mt-4">
+                  <TimelineBar
+                    percentage={80}
+                    color="green"
+                    label="Technical Skills"
+                    showPercentage={true}
+                    textColor="text-white"
+                  />
+                  <TimelineBar
+                    percentage={60}
+                    color="orange"
+                    label="Soft Skills"
+                    showPercentage={true}
+                    textColor="text-white"
+                  />
                 </div>
               </div>
             </div>
@@ -218,8 +221,8 @@ export default function AnalyzePage() {
 
             {/* Skill Gaps */}
             <div className="max-w-6xl">
-              <h3 className="text-xl font-bold !text-black mb-4">Skill Gaps to Address</h3>
-              <Card className="dashboard-card p-6 space-y-4">
+              <h3 className="text-xl font-bold text-white mb-4">Skill Gaps to Address</h3>
+              <Card className="dashboard-card bg-gray-800 border-none p-6 space-y-4">
                 {analysis.skillGaps.map((gap, idx) => {
                   const gapSize = gap.targetLevel - gap.currentLevel;
                   const percentage = (gap.currentLevel / gap.targetLevel) * 100;
@@ -228,8 +231,8 @@ export default function AnalyzePage() {
                     <div key={idx} className="space-y-2">
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="font-semibold !text-black">{gap.skill}</span>
-                          <span className="text-xs !text-black ml-2">
+                          <span className="font-semibold !text-white">{gap.skill}</span>
+                          <span className="text-xs !text-white ml-2">
                             {gap.currentLevel}/{gap.targetLevel}
                           </span>
                         </div>
@@ -240,14 +243,14 @@ export default function AnalyzePage() {
                             }`}>
                             {gapSize === 0 ? '✓ Met' : `↑ ${gapSize} levels`}
                           </span>
-                          <span className="text-xs !text-black">{gap.estimatedHours}h</span>
+                          <span className="text-xs !text-white">{gap.estimatedHours}h</span>
                         </div>
                       </div>
                       <TimelineBar
                         percentage={percentage}
                         color={getGapColor(gapSize)}
                       />
-                      <p className="text-xs !text-black">{gap.reason}</p>
+                      <p className="text-xs !text-white">{gap.reason}</p>
                     </div>
                   );
                 })}
@@ -257,16 +260,16 @@ export default function AnalyzePage() {
             {/* Strengths */}
             {analysis.matchedSkills.length > 0 && (
               <div className="max-w-6xl">
-                <h3 className="text-xl font-bold !text-black mb-4">Your Strengths</h3>
+                <h3 className="text-xl font-bold text-white mb-4">Your Strengths</h3>
                 <div className="grid grid-cols-3 gap-4">
                   {analysis.matchedSkills.map((skill, idx) => (
-                    <div key={idx} className="dashboard-card p-4">
+                    <div key={idx} className="dashboard-card border-none bg-zinc-800 p-4">
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold !text-black">{skill.skill}</span>
+                        <span className="font-semibold !text-white">{skill.skill}</span>
                         <span className="text-[#FACC15]">✓</span>
                       </div>
-                      <div className="text-xs !text-black mt-1">
-                        {skill.currentLevel}/{skill.targetLevel} - {skill.status}
+                      <div className="text-xs !text-white mt-1">
+                        {skill.targetLevel} - {skill.status}/{skill.currentLevel}
                       </div>
                     </div>
                   ))}
