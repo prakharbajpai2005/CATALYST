@@ -33,7 +33,8 @@ const passportRoutes = require('./routes/passport');
 const resumeRoutes = require('./routes/resume');
 const analyzeRoutes = require('./routes/analyze');
 const roadmapRoutes = require('./routes/roadmap');
-const testGeminiRoutes = require('./routes/test-gemini');
+const roadmapRoutes = require('./routes/roadmap');
+const testOpenRouterRoutes = require('./routes/test-openrouter');
 
 app.use('/api/simulation', simulationRoutes);
 app.use('/api/user', userRoutes);
@@ -42,7 +43,7 @@ app.use('/api/passport', passportRoutes);
 app.use('/api/resume', resumeRoutes);
 app.use('/api/analyze', analyzeRoutes);
 app.use('/api/roadmap', roadmapRoutes);
-app.use('/api/test-gemini', testGeminiRoutes);
+app.use('/api/test-openrouter', testOpenRouterRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

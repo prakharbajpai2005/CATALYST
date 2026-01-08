@@ -2,9 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { cacheWrapper, hashObject } = require('../utils/cache');
 const { generateContent } = require('../utils/openrouter');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 
 
@@ -31,10 +29,7 @@ router.post('/gap', async (req, res) => {
       cacheKey,
       7 * 24 * 60 * 60, // Cache for 7 days
       async () => {
-        const model = genAI.getGenerativeModel({ 
-          model: 'gemini-1.5-flash'
-        });
-
+      async () => {
         const prompt = `You are a career gap analyzer. Compare the candidate's current skills against a job description.
 
 CURRENT SKILLS:
@@ -87,8 +82,7 @@ Return ONLY valid JSON in this format:
   "summary": "Brief 2-3 sentence summary of the gap analysis"
 }`;
 
-        const result = await model.generateContent(prompt);
-        const response = result.response.text();
+        const response = await generateContent(prompt);
 
         // Clean up the response
         let jsonText = response.trim();

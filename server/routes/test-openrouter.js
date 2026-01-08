@@ -1,21 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const { generateContent } = require('../utils/openrouter');
 
 // Test endpoint to check if API key and model work
 router.get('/test', async (req, res) => {
   try {
-    // Test with the flash model
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-    const result = await model.generateContent('Say hello in one sentence');
-    const response = result.response.text();
+    // Test with a simple prompt
+    const response = await generateContent('Say hello in one sentence');
     
     res.json({
       success: true,
-      message: 'Gemini API is working correctly!',
-      model: 'gemini-2.5-flash',
+      message: 'OpenRouter API is working correctly!',
       response,
       timestamp: new Date()
     });
@@ -24,7 +19,7 @@ router.get('/test', async (req, res) => {
       success: false,
       error: error.message,
       details: error.toString(),
-      hint: 'Check if GEMINI_API_KEY is set in .env file'
+      hint: 'Check if OPENROUTER_API_KEY is set in .env file'
     });
   }
 });
@@ -32,22 +27,16 @@ router.get('/test', async (req, res) => {
 // Test endpoint with custom prompt
 router.post('/test', async (req, res) => {
   try {
-    const { prompt, model: modelName } = req.body;
+    const { prompt, model } = req.body;
     
     if (!prompt) {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
-    const model = genAI.getGenerativeModel({ 
-      model: modelName || 'gemini-2.5-flash' 
-    });
-    
-    const result = await model.generateContent(prompt);
-    const response = result.response.text();
+    const response = await generateContent(prompt, model);
     
     res.json({
       success: true,
-      model: modelName || 'gemini-2.5-flash',
       prompt,
       response,
       timestamp: new Date()
