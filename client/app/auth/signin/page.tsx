@@ -1,5 +1,6 @@
 "use client"
 
+import { Suspense } from "react"
 import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,7 +11,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 
-export default function SignInPage() {
+function SignInContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const successMessage = searchParams.get("success")
@@ -118,5 +119,13 @@ export default function SignInPage() {
                 </CardContent>
             </Card>
         </div>
+    )
+}
+
+export default function SignInPage() {
+    return (
+        <Suspense fallback={<div className="h-screen w-full flex items-center justify-center bg-black text-white">Loading...</div>}>
+            <SignInContent />
+        </Suspense>
     )
 }
