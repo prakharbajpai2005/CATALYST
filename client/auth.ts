@@ -18,7 +18,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 }
 
                 try {
-                    const res = await fetch("http://localhost:5000/api/users/login", {
+                    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://ai-nterview-backend.onrender.com";
+                    const res = await fetch(`${apiUrl}/api/users/login`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
