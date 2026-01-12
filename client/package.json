@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npx @cloudflare/next-on-pages",
+    "next:build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
@@ -29,6 +30,7 @@
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
