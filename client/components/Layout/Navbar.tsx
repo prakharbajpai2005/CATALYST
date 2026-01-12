@@ -4,11 +4,13 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import { Orbitron } from 'next/font/google';
+import { useSession, signOut } from 'next-auth/react';
 
 const orbitron = Orbitron({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800', '900'] });
 
 export default function Navbar() {
     const router = useRouter();
+    const { data: session } = useSession();
 
     return (
         <header className="fixed top-0 right-0 left-20 z-40 bg-black">
@@ -20,9 +22,21 @@ export default function Navbar() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <button className="text-white bg-zinc-700 px-4 py-2 rounded-full">
-                        Sign In
-                    </button>
+                    {session ? (
+                        <button
+                            className="text-red-500 hover:text-red-400 font-semibold px-4 py-2 transition-colors"
+                            onClick={() => signOut()}
+                        >
+                            Logout
+                        </button>
+                    ) : (
+                        <button
+                            className="text-white bg-zinc-700 px-4 py-2 rounded-full hover:bg-zinc-600 transition-colors"
+                            onClick={() => router.push('/auth/signin')}
+                        >
+                            Sign In
+                        </button>
+                    )}
                     <Button
                         className="text-white bg-zinc-700 px-4 py-3 rounded-full  hover:bg-yellow-600"
                         onClick={() => router.push('/upload')}
