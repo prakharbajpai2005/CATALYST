@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "pages:build": "npx @cloudflare/next-on-pages",
+    "pages:build": "npx @cloudflare/next-on-pages && echo _worker.js > .vercel/output/static/.assetsignore",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
