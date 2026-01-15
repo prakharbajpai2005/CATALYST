@@ -37,7 +37,7 @@ const roadmapRoutes = require('./routes/roadmap');
 const testOpenRouterRoutes = require('./routes/test-openrouter');
 
 app.use('/api/simulation', simulationRoutes);
-app.use('/api/user', userRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/skill-tree', skillTreeRoutes);
 app.use('/api/passport', passportRoutes);
 app.use('/api/resume', resumeRoutes);

@@ -3,6 +3,7 @@ import { Rajdhani, Orbitron } from "next/font/google";
 import "./globals.css";
 import DashboardSidebar from "@/components/Layout/DashboardSidebar";
 import Navbar from "@/components/Layout/Navbar";
+import { Providers } from "@/components/providers";
 
 const rajdhani = Rajdhani({
   subsets: ["latin"],
@@ -29,11 +30,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${rajdhani.variable} ${orbitron.variable} font-sans antialiased bg-black`}>
-        <DashboardSidebar />
-        <Navbar />
-        <main className="ml-20">
-          {children}
-        </main>
+        <Providers>
+          <DashboardSidebar />
+          <Navbar />
+          <main className="ml-20">
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );

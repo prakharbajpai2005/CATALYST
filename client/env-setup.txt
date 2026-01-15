@@ -1,0 +1,21 @@
+# INSTRUCTIONS:
+# 1. Create a new file named ".env.local" in this directory (client/).
+# 2. Copy the content below into that file.
+# 3. Replace the placeholder values with your actual credentials.
+# 4. Restart your Next.js server (npm run dev).
+
+# --- COPY BELOW THIS LINE ---
+
+# NextAuth Configuration
+AUTH_SECRET="generate_a_secure_random_string_here" # Run `npx auth secret` in your terminal to generate one
+AUTH_URL="http://localhost:3000"
+
+# Google OAuth Provider
+# Get these from https://console.cloud.google.com/apis/credentials
+AUTH_GOOGLE_ID="your_google_client_id"
+AUTH_GOOGLE_SECRET="your_google_client_secret"
+
+# GitHub OAuth Provider
+# Get these from https://github.com/settings/developers
+AUTH_GITHUB_ID="your_github_client_id"
+AUTH_GITHUB_SECRET="your_github_client_secret"

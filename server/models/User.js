@@ -14,6 +14,14 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
+  password: {
+    type: String,
+    required: false // Optional because OAuth users won't have a password
+  },
+  goodname: {
+    type: String,
+    trim: true
+  },
   level: {
     type: Number,
     default: 1
