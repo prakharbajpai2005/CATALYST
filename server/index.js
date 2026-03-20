@@ -9,8 +9,7 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: [
-    'https://catalyst.saurabh5532u.workers.dev',
-    'https://ai-mock-interview-frontend-2.pages.dev',
+    'https://catalyst-v1.pages.dev',
     'http://localhost:3000',
     'http://localhost:5000'
   ],
