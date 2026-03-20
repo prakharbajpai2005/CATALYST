@@ -82,7 +82,17 @@ export default function UploadPage() {
       });
 
       console.log('Response status:', response.status);
-      const data = await response.json();
+
+      let data;
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        console.error('Non-JSON response received:', text.substring(0, 150));
+        data = { error: `Server returned non-JSON response (Status: ${response.status})` };
+      }
+
       console.log('Response data:', data);
 
       if (response.ok) {

@@ -1,4 +1,7 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? 'https://catalyst-five-flax.vercel.app/api' : 'http://localhost:5000/api');
+let baseUrl = process.env.NEXT_PUBLIC_API_URL || (process.env.NODE_ENV === 'production' ? 'https://catalyst-five-flax.vercel.app/api' : 'http://localhost:5000/api');
+if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
+if (!baseUrl.endsWith('/api')) baseUrl += '/api';
+export const API_BASE_URL = baseUrl;
 
 export const api = {
     // User endpoints
